@@ -82,16 +82,22 @@ double DotProduct(const Vector& v1, const Vector& v2) {
 }
 
 // TODO: BELOW
-// Vector CrossProduct(const Vector& v1, const Vector& v2) {
-//     // Need to verify that v1 and v2 have size = 3, since cross product only exists in 3D
-//     if (v1.size() != 3) {
-//         throw std::invalid_argument("Cannot perform cross product if vectors are not 3-dimensional.");
-//     }
-//     else if (!isSameDimension(v1,v2)) {
-//         throw std::invalid_argument("Cannot perform cross product if vectors are not same size.");
-//     }
+Vector CrossProduct(const Vector& v1, const Vector& v2) {
+    // Need to verify that v1 and v2 have size = 3, since cross product only exists in 3D
+    if (v1.size() != 3) {
+        throw std::invalid_argument("Cannot perform cross product if vectors are not 3-dimensional.");
+    }
+    else if (!isSameDimension(v1,v2)) {
+        throw std::invalid_argument("Cannot perform cross product if vectors are not same size.");
+    }
+    
+    double i = (v1[1] * v2[2]) - (v1[2] * v2[1]);
+    double j = (v1[0] * v2[2]) - (v1[2] * v2[0]);
+    double k = (v1[0] * v2[1]) - (v1[1] * v2[0]);
 
-// }   
+    return Vector({i,j,k});
+
+}   
 
 double VectorNorm(const Vector& v) {
     double sum = 0;
