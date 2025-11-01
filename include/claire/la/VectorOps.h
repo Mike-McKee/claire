@@ -8,7 +8,7 @@ namespace la {
     Vector VectorSubtraction(const Vector& v1, const Vector& v2);
     Vector ScalarMultiplication(const Vector& v, double k);
     double DotProduct(const Vector& v1, const Vector& v2);
-    Vector CrossProduct(const Vector& v1, const Vector& v2);
+    // Vector CrossProduct(const Vector& v1, const Vector& v2);
 
     // Magnitude and Direction
     double VectorNorm(const Vector& v);
@@ -18,8 +18,8 @@ namespace la {
 
     // Transformations and Projections
     Vector Projection(const Vector& v1, const Vector& v2);
-    Vector Reflection(const Vector& v1, const Vector& v2);
-    Vector Rotation(const Vector& v, double theta);
+    // Vector Reflection(const Vector& v1, const Vector& v2);
+    // Vector Rotation(const Vector& v, double theta);
 
     // Helper Functions
     void PrintVector(const Vector& v);
