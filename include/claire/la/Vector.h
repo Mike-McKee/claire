@@ -22,6 +22,9 @@ public:
     //-------- Object Info --------
     size_type size() const;
     bool isEmpty() const;
+
+    double operator[](size_type i) const { return data_[i]; }
+    // double& operator[](size_type i) { return data_[i]; }
 };
 
 }
