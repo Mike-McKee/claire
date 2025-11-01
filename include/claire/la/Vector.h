@@ -1,0 +1,27 @@
+#pragma once
+#include <vector>
+#include <cstddef> // size_t
+
+namespace la {
+
+class Vector
+{
+private:
+    std::vector<double> data_;
+public:
+    // using value_type = double; May use for future
+    using size_type = std::size_t;
+
+    //-------- Constructor --------
+    explicit Vector(std::vector<double> v);
+    // ~Vector();
+
+    //-------- Accessors --------
+    const std::vector<double>& data() const;
+
+    //-------- Object Info --------
+    size_type size() const;
+    bool isEmpty() const;
+};
+
+}
