@@ -14,6 +14,7 @@ public:
 
     //-------- Constructor --------
     explicit Vector(std::vector<double> v);
+    Vector(size_type n, double value); // Creates n-dimension vector with same value for each entry
     // ~Vector();
 
     //-------- Accessors --------
@@ -24,7 +25,7 @@ public:
     bool isEmpty() const;
 
     double operator[](size_type i) const { return data_[i]; }
-    // double& operator[](size_type i) { return data_[i]; }
+    double& operator[](size_type i) { return data_[i]; }
 };
 
 }
