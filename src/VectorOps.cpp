@@ -3,6 +3,7 @@
 #include <cmath>
 #include <iostream>
 #include "claire/la/VectorOps.h"
+#include "claire/la/MatrixOps.h"
 
 namespace la {
 
@@ -142,8 +143,105 @@ Vector Projection(const Vector& v1, const Vector& v2) {
     return ScalarMultiplication(v2,k);
 }
 
-// Vector Reflection(const Vector& v1, const Vector& v2) {
+Vector Rotation2D(const Vector& v, double degrees) {
+    // Typically use transformation matrix, but for now I'll use the basic formula:
+    // For vector v = [x,y], rotation by theta degress results in rotation vector Rv, where:
+    // Rv = [x*cos(theta) - y*sin(theta), x*sin(theta) + y*cos(theta)]
+    if (v.size() != 2) {
+        throw std::invalid_argument("Can only use Rotation2D() for two-dimensional vectors.");
+    }
+    
+    // double rad = degrees * (M_PI / 180.0);
+    // double new_x = (v[0] * cos(rad)) - (v[1] * sin(rad));
+    // double new_y = (v[0] * sin(rad)) + (v[1] * cos(rad));
 
+    double rad = degrees * (M_PI / 180.0);
+    Vector xrv = Vector(std::vector<double>{cos(rad),-sin(rad)});
+    Vector yrv = Vector(std::vector<double>{sin(rad),cos(rad)});
+
+    Matrix rotationMatrix = Matrix(std::vector<Vector>{xrv,yrv});
+    Matrix vm = Matrix({v});
+
+    Matrix rotatedv = MatrixMultiplication(rotationMatrix,vm);
+
+    return rotatedv.row(0);
+}
+
+Vector Rotation3D(const Vector& v, double degrees, char axis) {
+    if (v.size() != 3) {
+        throw std::invalid_argument("Must enter a vector in 3-dimension to rotate.");
+    }
+
+    if (axis != 'x' && axis != 'y' && axis != 'z') {
+        throw std::invalid_argument("Rotation axis must be x, y, or z.");
+    }
+
+    Matrix vm = Matrix({v});
+    Matrix rotationMatrix = Matrix(3.0,3.0);
+
+    switch (axis) {
+        case 'x': {
+            rotationMatrix = Matrix('x',degrees);
+            break;
+        }
+        case 'y': {
+            rotationMatrix = Matrix('y',degrees);
+            break;
+        }
+        case 'z': {
+            rotationMatrix = Matrix('z',degrees);
+            break;
+        }
+    }
+
+    Matrix rotatedVector = MatrixMultiplication(rotationMatrix,vm);
+
+    return rotatedVector.row(0);
+
+}
+
+// Vector Reflection2D(const Vector& v, char rtype, double lineslope = 0.0, double yintercept = 0.0) {
+//     /*
+//     Types of 2D reflections include:
+//         - about x-axis
+//         - about y-axis
+//         - along origin
+//         - about x = y line
+
+//     char rtype -> values = ('x','y','o','l')
+//     */
+
+//     if (rtype != 'x' && rtype != 'y' && rtype != 'o' && rtype != 'l') {
+//         throw std::invalid_argument("Reflection type must be x, y, o, or l.");
+//     }
+
+//     Vector xReflect = Vector(std::vector<double>{1.0,0.0});
+//     Vector yReflect = Vector(std::vector<double>{0.0,1.0});
+//     Matrix reflectionM = Matrix(std::vector<Vector>{xReflect,yReflect});
+
+//     switch (rtype) {
+//         case 'x': {
+//             reflectionM.row(1)[1] = -1.0;
+//             break;
+//         }
+//         case 'y': {
+//             reflectionM.row(0)[0] = -1.0;
+//             break;
+//         }
+//         case 'o': {
+//             reflectionM.row(0)[0] = -1.0;
+//             reflectionM.row(1)[1] = -1.0;
+//             break;
+//         }
+//         case 'l': {
+            
+//             break;
+//         }
+//     }
+
+//     Matrix vm = Matrix({v});
+//     Matrix reflectedV = MatrixMultiplication(reflectionM,vm);
+
+//     return vm.row(0);
 // }
-
 }
