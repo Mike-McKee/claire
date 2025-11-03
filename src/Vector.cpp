@@ -1,9 +1,12 @@
 #include <utility>
+#include <vector>
 #include "claire/la/Vector.h"
 
 namespace la {
 
 Vector::Vector(std::vector<double> v) : data_(std::move(v)) {}
+
+Vector::Vector(Vector::size_type n, double value) : data_(n,value) {}
 
 const std::vector<double>& Vector::data() const {
     return data_;
