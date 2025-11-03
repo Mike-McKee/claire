@@ -4,7 +4,7 @@
 namespace la {
 
     // Arithmetic
-    Vector VectorAdddition(const Vector& v1, const Vector& v2);
+    Vector VectorAddition(const Vector& v1, const Vector& v2);
     Vector VectorSubtraction(const Vector& v1, const Vector& v2);
     Vector ScalarMultiplication(const Vector& v, double k);
     double DotProduct(const Vector& v1, const Vector& v2);
@@ -18,8 +18,9 @@ namespace la {
 
     // Transformations and Projections
     Vector Projection(const Vector& v1, const Vector& v2);
-    // Vector Reflection(const Vector& v1, const Vector& v2);
-    // Vector Rotation(const Vector& v, double theta);
+    Vector Rotation2D(const Vector& v, double degrees = 90.0);
+    Vector Rotation3D(const Vector& v, double degrees, char axis);
+    Vector Reflection2D(const Vector& v, char rtype, double lineslope = 0.0);
 
     // Helper Functions
     void PrintVector(const Vector& v);
