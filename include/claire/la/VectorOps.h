@@ -20,7 +20,8 @@ namespace la {
     Vector Projection(const Vector& v1, const Vector& v2);
     Vector Rotation2D(const Vector& v, double degrees = 90.0);
     Vector Rotation3D(const Vector& v, double degrees, char axis);
-    Vector Reflection2D(const Vector& v, char rtype, double lineslope = 0.0);
+    Vector Reflection2D(const Vector& v, char rtype, double lineslope = 0.0,
+                        double xcoeff = 0.0, double ycoeff = 0.0, double intercept = 0.0);
 
     // Helper Functions
     void PrintVector(const Vector& v);

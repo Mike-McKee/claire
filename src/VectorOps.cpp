@@ -200,48 +200,84 @@ Vector Rotation3D(const Vector& v, double degrees, char axis) {
 
 }
 
-// Vector Reflection2D(const Vector& v, char rtype, double lineslope = 0.0, double yintercept = 0.0) {
-//     /*
-//     Types of 2D reflections include:
-//         - about x-axis
-//         - about y-axis
-//         - along origin
-//         - about x = y line
+Vector Reflection2D(const Vector& v, char rtype, double lineslope = 0.0,
+                    double xcoeff = 0.0, double ycoeff = 0.0, double intercept = 0.0) {
+    /*
+    Types of 2D reflections include:
+        - about x-axis
+        - about y-axis
+        - along origin
+        - about x = y line
 
-//     char rtype -> values = ('x','y','o','l')
-//     */
+    char rtype -> values = ('x','y','o','l')
+    */
 
-//     if (rtype != 'x' && rtype != 'y' && rtype != 'o' && rtype != 'l') {
-//         throw std::invalid_argument("Reflection type must be x, y, o, or l.");
-//     }
+    if (rtype != 'x' && rtype != 'y' && rtype != 'o' && rtype != 'l') {
+        throw std::invalid_argument("Reflection type must be x, y, o, or l.");
+    }
 
-//     Vector xReflect = Vector(std::vector<double>{1.0,0.0});
-//     Vector yReflect = Vector(std::vector<double>{0.0,1.0});
-//     Matrix reflectionM = Matrix(std::vector<Vector>{xReflect,yReflect});
+    Vector xReflect = Vector(std::vector<double>{1.0,0.0});
+    Vector yReflect = Vector(std::vector<double>{0.0,1.0});
+    Matrix reflectionM = Matrix(std::vector<Vector>{xReflect,yReflect});
 
-//     switch (rtype) {
-//         case 'x': {
-//             reflectionM.row(1)[1] = -1.0;
-//             break;
-//         }
-//         case 'y': {
-//             reflectionM.row(0)[0] = -1.0;
-//             break;
-//         }
-//         case 'o': {
-//             reflectionM.row(0)[0] = -1.0;
-//             reflectionM.row(1)[1] = -1.0;
-//             break;
-//         }
-//         case 'l': {
+    switch (rtype) {
+        case 'x': {
+            reflectionM.row(1)[1] = -1.0;
+            break;
+        }
+        case 'y': {
+            reflectionM.row(0)[0] = -1.0;
+            break;
+        }
+        case 'o': {
+            reflectionM.row(0)[0] = -1.0;
+            reflectionM.row(1)[1] = -1.0;
+            break;
+        }
+        case 'l': {
+            /*
+            Using Householder transformation here: v' = (I - 2nn^T)x + 2dn
+            Where:
+            - v = original vector
+            - v' = reflected vector
+            - I = identity matrix in 2D
+            - n = unit normal vector to the line (length = 1 and perpendicular to the line)
+            - n^T = transpose of n
+            - nn^T = "outer product" = projection matrix of any vector onto normal direction
+                - determines how much of x lies along the normal direction
+            - d = signed distance from origin to the line
+            - I - 2nn^T = Householder reflection matrix = 
+            - 2dn = translation correction that adjusts for lines that do not pass through origin
+
+            Input requires line in form -> Ax + By + C = 0
+            - xcoeff = A
+            - ycoeff = B
+            - intercept = C
+
+            - Using A, B, C, we can derive the following equation for reflection:
+                v' = (x',y')
+                x' = ((BB - AA) / (AA + BB))x - ((2AB)/(AA + BB))y - ((2AC)/(AA + BB))
+                y' = -((2AB)/ (AA + BB))x + ((AA - BB)/(AA + BB))y - ((2BC)/(AA + BB))
+            */
+           
+            double a2 = xcoeff * xcoeff;
+            double b2 = ycoeff * ycoeff;
+            double ab = xcoeff * ycoeff;
+            double ac = xcoeff * intercept;
+            double bc = ycoeff * intercept;
             
-//             break;
-//         }
-//     }
+            double x_ref = (v[0] * (b2-a2)/(a2+b2)) - (v[1] * (2*ab)/(a2+b2)) - ((2*ac)/(a2+b2));
+            double y_ref = (-1 * v[0] * (2*ab)/(a2+b2)) + (v[1] * (a2-b2)/(a2+b2)) - ((2*bc)/(a2+b2));
 
-//     Matrix vm = Matrix({v});
-//     Matrix reflectedV = MatrixMultiplication(reflectionM,vm);
+            Vector reflectV = Vector(std::vector<double>{x_ref,y_ref});
+            
+            return reflectV;
+        }
+    }
 
-//     return vm.row(0);
-// }
+    Matrix vm = Matrix({v});
+    Matrix reflectedV = MatrixMultiplication(reflectionM,vm);
+
+    return vm.row(0);
+}
 }
