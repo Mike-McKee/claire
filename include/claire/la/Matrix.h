@@ -29,6 +29,8 @@ public:
     
     // -------- Accessors --------
     const std::vector<Vector>& data() const;
+    std::vector<Vector>::iterator begin() {return rows_.begin();}
+    std::vector<Vector>::iterator end() {return rows_.end();}
     
     // -------- Object Info --------
     std::vector<size_type> dimension() const;
@@ -39,6 +41,6 @@ public:
     //-------- Operators --------
     const Vector& row(size_type i) const;
     Vector& row(size_type i);
-}
+};
 
 }
