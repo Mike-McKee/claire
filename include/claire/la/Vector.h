@@ -19,6 +19,8 @@ public:
 
     //-------- Accessors --------
     const std::vector<double>& data() const;
+    std::vector<double>::iterator begin() {return data_.begin();}
+    std::vector<double>::iterator end() {return data_.end();}
 
     //-------- Object Info --------
     size_type size() const;
