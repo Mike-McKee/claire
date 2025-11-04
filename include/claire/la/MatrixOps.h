@@ -1,4 +1,5 @@
 #pragma once
+#include <set>
 #include <string>
 #include "Matrix.h"
 
@@ -9,7 +10,7 @@ namespace la {
     Matrix ScalarMultiplication(const Matrix& m, double k);
     Matrix MatrixMultiplication(const Matrix& m1, const Matrix& m2);
     double Determinant2x2(const Matrix& m);
-    Matrix MinorMatrix(const Matrix& m, Matrix::size_type r, Matrix::size_type c);
+    Matrix MinorMatrix(const Matrix& m, const std::set<Matrix::size_type>& r, const std::set<Matrix::size_type>& c); // allow multiple delete rows/columns
     double Determinant(const Matrix& m);
     Matrix::size_type Rank(const Matrix& m);
     bool isFullRank(const Matrix& m);
