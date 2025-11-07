@@ -21,6 +21,8 @@ public:
     const std::vector<double>& data() const;
     std::vector<double>::iterator begin() {return data_.begin();}
     std::vector<double>::iterator end() {return data_.end();}
+    std::vector<double>::const_iterator begin() const { return data_.begin(); }
+std::vector<double>::const_iterator end()   const { return data_.end(); }
 
     //-------- Object Info --------
     size_type size() const;
