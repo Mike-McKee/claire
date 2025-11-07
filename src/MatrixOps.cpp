@@ -176,4 +176,35 @@ double Determinant(const Matrix& m) {
     
 }
 
+Matrix RowScale(const Matrix& m, Matrix::size_type& r) {
+    double f = 0.0;
+    for (double x : m.row(r)) {
+        if (x != 0) {
+            f = x;
+            break;
+        }
+    }
+
+    if (f == 0.0) {
+        return m;
+    }
+    else {
+        Matrix m2(m);
+    
+        for (double& c : m2.row(r)) {
+            c /= f;
+        }
+    }
+}
+
+// Matrix RowSwap(const Matrix& m, Matrix::size_type& r1, Matrix::size_type& r2) {
+//     Matrix rs(m);
+//     return std::swap(rs.row(r1),rs.row(r2));
+// }
+
+
+// Matrix RowReplacement(const Matrix&m, Matrix::size_type& r1, Matrix::size_type& r2);
+// Matrix RowEchelonForm(const Matrix& m);
+// Matrix ReducedRowEchelonForm(const Matrix& m);
+
 }
