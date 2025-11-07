@@ -82,7 +82,6 @@ double DotProduct(const Vector& v1, const Vector& v2) {
     return dot;
 }
 
-// TODO: BELOW
 Vector CrossProduct(const Vector& v1, const Vector& v2) {
     // Need to verify that v1 and v2 have size = 3, since cross product only exists in 3D
     if (v1.size() != 3) {
@@ -93,7 +92,7 @@ Vector CrossProduct(const Vector& v1, const Vector& v2) {
     }
     
     double i = (v1[1] * v2[2]) - (v1[2] * v2[1]);
-    double j = (v1[0] * v2[2]) - (v1[2] * v2[0]);
+    double j = (v1[2] * v2[0]) - (v1[0] * v2[2]);
     double k = (v1[0] * v2[1]) - (v1[1] * v2[0]);
 
     return Vector({i,j,k});
