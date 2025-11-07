@@ -1,7 +1,9 @@
 #define _USE_MATH_DEFINES
+// #include <numbers>
 #include <stdexcept>
 #include <utility>
-#include <Vector.h>
+#include <cmath>
+// #include "claire/la/Vector.h"
 #include "claire/la/Matrix.h"
 
 namespace la {
@@ -47,8 +49,8 @@ Matrix::Matrix(char axis, double degrees) {
     Vector r2 = Vector(3,0.0);
     Vector r3 = Vector(3,0.0);
 
-    double c = cos(degrees * (M_PI / 180.0));
-    double s = sin(degrees * (M_PI / 180.0));
+    double c = std::cos(degrees * (M_PI / 180.0));
+    double s = std::sin(degrees * (M_PI / 180.0));
 
     if (axis == 'x') {
         r1[0] = 1.0;
@@ -90,7 +92,7 @@ Matrix::Matrix(const std::vector<Vector>& rows) : rows_(rows) {
     }
 }
 
-Matrix::Matrix(const Matrix& other) = default;
+// Matrix::Matrix(const Matrix& other) = default;
 
 const std::vector<Vector>& Matrix::data() const {
     return rows_;
