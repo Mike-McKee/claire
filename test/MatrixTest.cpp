@@ -1,8 +1,9 @@
 #include <iostream>
 #include "claire/la/Matrix.h"
+#include "claire/la/MatrixOps.h"
 #include "claire/la/VectorOps.h"
 
-// To Compile: g++ .\MatrixTest.cpp ..\src\Vector.cpp ..\src\Matrix.cpp ..\src\VectorOps.cpp -I..\include\ -o MatrixTest
+// To Compile: g++ .\MatrixTest.cpp ..\src\Vector.cpp ..\src\Matrix.cpp ..\src\MatrixOps.cpp ..\src\VectorOps.cpp -I..\include\ -o MatrixTest
 
 int main() {
     // Need to test all Matrix class methods
@@ -28,10 +29,11 @@ int main() {
     la::Matrix im(5);
     std::cout << "\n------ Identity Matrix Test ------\n\n";
 
-    for (la::Vector& r : im) {
-        la::PrintVector(r);
-        std::cout << "\n";
-    }
+    // for (la::Vector& r : im) {
+    //     la::PrintVector(r);
+    //     std::cout << "\n";
+    // }
+    la::PrintMatrix(im);
 
     // 3D rotation matrix
     la::Matrix rm('x',90.0);

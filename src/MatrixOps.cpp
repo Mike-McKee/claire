@@ -50,139 +50,139 @@ Matrix ScalarMultiplication(const Matrix& m, double k) {
     return sm;
 }
 
-// Matrix MatrixMultiplication(const Matrix& m1, const Matrix& m2) {
-//     std::vector<Matrix::size_type> m1Dim = m1.dimension();
-//     std::vector<Matrix::size_type> m2Dim = m2.dimension();
+Matrix MatrixMultiplication(const Matrix& m1, const Matrix& m2) {
+    std::vector<Matrix::size_type> m1Dim = m1.dimension();
+    std::vector<Matrix::size_type> m2Dim = m2.dimension();
 
-//     if (m1Dim[1] != m2Dim[0]) {
-//         throw std::invalid_argument("m1 column dimension must equal m2 row dimension.");
-//     }
+    if (m1Dim[1] != m2Dim[0]) {
+        throw std::invalid_argument("m1 column dimension must equal m2 row dimension.");
+    }
 
-//     Matrix mm = Matrix(m1Dim[0],m2Dim[1]);
+    Matrix mm = Matrix(m1Dim[0],m2Dim[1]);
 
-//     for (Matrix::size_type i = 0; i < m1Dim[0]; ++i) {
-//         Vector r = Vector(m2Dim[1],0.0);
-//         for (Matrix::size_type j = 0; j < m2Dim[1]; ++j) {
-//             double entry = 0.0;
-//             for (Matrix::size_type k = 0; k < m1Dim[1]; ++k) {
-//                 entry += m1.row(i)[k] * m2.row(k)[j];
-//             }
-//             r[j] = entry;
-//         }
-//         mm.row(i) = r;
-//     }
+    for (Matrix::size_type i = 0; i < m1Dim[0]; ++i) {
+        Vector r = Vector(m2Dim[1],0.0);
+        for (Matrix::size_type j = 0; j < m2Dim[1]; ++j) {
+            double entry = 0.0;
+            for (Matrix::size_type k = 0; k < m1Dim[1]; ++k) {
+                entry += m1.row(i)[k] * m2.row(k)[j];
+            }
+            r[j] = entry;
+        }
+        mm.row(i) = r;
+    }
 
-//     return mm;
+    return mm;
     
-// }
+}
 
-// double Determinant2x2(const Matrix& m) {
-//     std::vector<Matrix::size_type> mDim = m.dimension();
-//     if (mDim[0] != 2 || mDim[1] != 0) {
-//         throw new std::invalid_argument("Must enter a 2x2 matrix.");
-//     }
+double Determinant2x2(const Matrix& m) {
+    std::vector<Matrix::size_type> mDim = m.dimension();
+    if (mDim[0] != 2 || mDim[1] != 2) {
+        throw std::invalid_argument("Must enter a 2x2 matrix.");
+    }
 
-//     return (m.row(0)[0] * m.row(1)[1]) - (m.row(0)[1] * m.row(1)[0]);
-// }
+    return (m.row(0)[0] * m.row(1)[1]) - (m.row(0)[1] * m.row(1)[0]);
+}
 
-// Matrix MinorMatrix(const Matrix& m, const std::set<Matrix::size_type>& r, const std::set<Matrix::size_type>& c) {
-//     /*
-//     Parameters:
-//     -----------
-//     -> m: -> The matrix we wish to find Minor Matrix for
-//     -> r -> index(s) for the delete row
-//     -> c -> index(s) for the delete column
+Matrix MinorMatrix(const Matrix& m, const std::set<Matrix::size_type>& r, const std::set<Matrix::size_type>& c) {
+    /*
+    Parameters:
+    -----------
+    -> m: -> The matrix we wish to find Minor Matrix for
+    -> r -> index(s) for the delete row
+    -> c -> index(s) for the delete column
 
-//     Note: A MinorMatrix is a smaller matrix obtained from a larget one by deleting one or more rows and/or one columns
-//     */
+    Note: A MinorMatrix is a smaller matrix obtained from a larget one by deleting one or more rows and/or one columns
+    */
 
-//     std::vector<Matrix::size_type> mDim = m.dimension();
-//     std::size_t rSize = r.size();
-//     std::size_t cSize = c.size();
-//     Matrix::size_type mmRow = mDim[0] - rSize;
-//     Matrix::size_type mmCol = mDim[1] - cSize;
+    std::vector<Matrix::size_type> mDim = m.dimension();
+    std::size_t rSize = r.size();
+    std::size_t cSize = c.size();
+    Matrix::size_type mmRow = mDim[0] - rSize;
+    Matrix::size_type mmCol = mDim[1] - cSize;
 
-//     Matrix mm = Matrix(mmRow,mmCol); // Initialize zero matrix we will fill in
+    Matrix mm = Matrix(mmRow,mmCol); // Initialize zero matrix we will fill in
 
-//     Matrix::size_type curr_mmRow = 0;
-//     for (Matrix::size_type i = 0; i < mDim[0]; ++i) {
-//         if (r.find(i) != r.end()) {
-//             continue;
-//         }
-//         Matrix::size_type curr_mmCol = 0;
-//         for (Matrix::size_type j = 0; j < mDim[1]; ++j) {
-//             if (c.find(j) != c.end()) {
-//                 continue;
-//             }
-//             mm.row(curr_mmRow)[curr_mmCol] = m.row(i)[j];
-//             ++curr_mmCol;
-//         }
-//         ++curr_mmRow;
-//     }
+    Matrix::size_type curr_mmRow = 0;
+    for (Matrix::size_type i = 0; i < mDim[0]; ++i) {
+        if (r.find(i) != r.end()) {
+            continue;
+        }
+        Matrix::size_type curr_mmCol = 0;
+        for (Matrix::size_type j = 0; j < mDim[1]; ++j) {
+            if (c.find(j) != c.end()) {
+                continue;
+            }
+            mm.row(curr_mmRow)[curr_mmCol] = m.row(i)[j];
+            ++curr_mmCol;
+        }
+        ++curr_mmRow;
+    }
 
-//     return mm;
+    return mm;
 
-// }
+}
 
-// double Determinant(const Matrix& m) {
-//     std::vector<Matrix::size_type> mDim = m.dimension();
-//     if (mDim[0] != mDim[1]) {
-//         throw std::invalid_argument("Matrix must be a square matrix to compute the determinant.");
-//     }
+double Determinant(const Matrix& m) {
+    std::vector<Matrix::size_type> mDim = m.dimension();
+    if (mDim[0] != mDim[1]) {
+        throw std::invalid_argument("Matrix must be a square matrix to compute the determinant.");
+    }
 
-//     if (mDim[0] == 1) {
-//         return m.row(0)[0]; // 1x1 determinant has matrix equal to its only entry
-//     }
-//     else if (mDim[0] == 2) {
-//         return Determinant2x2(m);
-//     }
-//     else { // Use Cofactor Expansion
-//         Matrix::size_type r_delete = 0;             // row to delete for MinorMatrix
-//         std::vector<Matrix::size_type> z_indices;   // indicates col index in cofactor row where entry = 0
-//         Matrix::size_type z_count = 0;                            // indicates # of zeros in cofactor row
+    if (mDim[0] == 1) {
+        return m.row(0)[0]; // 1x1 determinant has matrix equal to its only entry
+    }
+    else if (mDim[0] == 2) {
+        return Determinant2x2(m);
+    }
+    else { // Use Cofactor Expansion
+        Matrix::size_type r_delete = 0;             // row to delete for MinorMatrix
+        std::vector<Matrix::size_type> z_indices;   // indicates col index in cofactor row where entry = 0
+        Matrix::size_type z_count = 0;                            // indicates # of zeros in cofactor row
 
-//         // Below for loop searches for row with the most zeros to use as delete row in MinorMatrix
-//         for (Matrix::size_type i = 0; i < mDim[0]; ++i) {
-//             if (z_count == mDim[1]) {
-//                 return 0.0; // If zero matrix, determinant = 0
-//             }
+        // Below for loop searches for row with the most zeros to use as delete row in MinorMatrix
+        for (Matrix::size_type i = 0; i < mDim[0]; ++i) {
+            if (z_count == mDim[1]) {
+                return 0.0; // If zero matrix, determinant = 0
+            }
 
-//             Matrix::size_type r_num_zero = 0; // Current # of 0 entries in row
-//             std::vector<Matrix::size_type> r_z_indices; // col index for current row check 0 entries
+            Matrix::size_type r_num_zero = 0; // Current # of 0 entries in row
+            std::vector<Matrix::size_type> r_z_indices; // col index for current row check 0 entries
 
-//             for (Matrix::size_type j = 0; j < mDim[1]; ++j) {
-//                 if (m.row(i)[j] == 0) {
-//                     ++r_num_zero;
-//                     r_z_indices.push_back(j);
-//                 }
-//             }
+            for (Matrix::size_type j = 0; j < mDim[1]; ++j) {
+                if (m.row(i)[j] == 0) {
+                    ++r_num_zero;
+                    r_z_indices.push_back(j);
+                }
+            }
 
-//             if (r_num_zero > z_count) {
-//                 r_delete = i;
-//                 z_count = r_num_zero;
-//                 z_indices = std::move(r_z_indices);
-//             }
-//         }
+            if (r_num_zero > z_count) {
+                r_delete = i;
+                z_count = r_num_zero;
+                z_indices = std::move(r_z_indices);
+            }
+        }
 
-//         // Now we search for the first nonzero entry in our row to serve as delete col in MinorMatrix
-//         double det = 0.0;
-//         for (Matrix::size_type k = 0; k < mDim[1]; ++k) {
-//             if (std::find(z_indices.begin(), z_indices.end(), k) != z_indices.end()) {
-//                 continue;
-//             }
-//             else {
-//                 Matrix mm = MinorMatrix(m, std::set<Matrix::size_type>{r_delete}, std::set<Matrix::size_type>{k});
+        // Now we search for the first nonzero entry in our row to serve as delete col in MinorMatrix
+        double det = 0.0;
+        for (Matrix::size_type k = 0; k < mDim[1]; ++k) {
+            if (std::find(z_indices.begin(), z_indices.end(), k) != z_indices.end()) {
+                continue;
+            }
+            else {
+                Matrix mm = MinorMatrix(m, std::set<Matrix::size_type>{r_delete}, std::set<Matrix::size_type>{k});
 
-//                 double sign = ((r_delete + k) & 1) ? -1.0 : 1.0;    // bitwise parity
-//                 det += std::pow(-1,(r_delete + k)) * m.row(r_delete)[k] * Determinant(mm);
-//             }
-//         }
+                double sign = ((r_delete + k) & 1) ? -1.0 : 1.0;    // bitwise parity
+                det += std::pow(-1,(r_delete + k)) * m.row(r_delete)[k] * Determinant(mm);
+            }
+        }
 
-//         return det;
+        return det;
 
-//     }
+    }
     
-// }
+}
 
 // Matrix RowScale(const Matrix& m, Matrix::size_type& r) {
 //     double f = 0.0;
