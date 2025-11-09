@@ -2,9 +2,17 @@
 #include <algorithm> //for std::find
 #include <cmath>
 #include <iostream>
+#include "claire/la/VectorOps.h"
 #include "claire/la/MatrixOps.h"
 
 namespace la {
+
+void PrintMatrix(const Matrix& m) {
+    for (const Vector& v : m) {
+        PrintVector(v);
+        std::cout << "\n";
+    }
+}
 
 Matrix MatrixAddition(const Matrix& m1, const Matrix& m2) {
     std::vector<Matrix::size_type> m1Dim = m1.dimension();

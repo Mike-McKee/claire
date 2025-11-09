@@ -5,6 +5,8 @@
 
 namespace la {
 
+    void PrintMatrix(const Matrix& m);
+
     Matrix MatrixAddition(const Matrix& m1, const Matrix& m2);
     Matrix MatrixSubtraction(const Matrix& m1, const Matrix& m2);
     Matrix ScalarMultiplication(const Matrix& m, double k);
