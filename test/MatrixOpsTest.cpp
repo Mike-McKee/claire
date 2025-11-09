@@ -3,7 +3,7 @@
 #include "claire/la/VectorOps.h"
 #include "claire/la/MatrixOps.h"
 
-// To Compile:
+// To Compile: g++ .\MatrixOpsTest.cpp ..\src\Vector.cpp ..\src\VectorOps.cpp ..\src\Matrix.cpp ..\src\MatrixOps.cpp -I..\include\ -o MatrixOpsTest
 
 int main() {
     std::cout << std::endl;
