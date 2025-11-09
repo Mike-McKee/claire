@@ -31,6 +31,8 @@ public:
     const std::vector<Vector>& data() const;
     std::vector<Vector>::iterator begin() {return rows_.begin();}
     std::vector<Vector>::iterator end() {return rows_.end();}
+    std::vector<Vector>::const_iterator begin() const {return rows_.begin();}
+    std::vector<Vector>::const_iterator end() const {return rows_.end();}
     
     // -------- Object Info --------
     std::vector<size_type> dimension() const;
