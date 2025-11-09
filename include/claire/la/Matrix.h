@@ -19,7 +19,7 @@ public:
 
     explicit Matrix(size_type rows, size_type cols); // Zero Matrix
     Matrix(size_type n); // Identity Matrix
-    Matrix(char axis, double degrees); // Create a 3D rotation matrix
+    explicit Matrix(char axis, double degrees); // Create a 3D rotation matrix
     Matrix(const std::vector<Vector>& rows); // Matrix with specific values
     Matrix(const Matrix& other) = default; // Copy constructor
 

@@ -110,4 +110,12 @@ std::vector<Matrix::size_type> Matrix::dimension() const {
     return {Matrix::rowCount(),Matrix::colCount()};
 }
 
+const Vector& Matrix::row(Matrix::size_type i) const {
+    return rows_[i];
+}
+
+Vector& Matrix::row(Matrix::size_type i) {
+    return rows_[i];
+}
+
 }
