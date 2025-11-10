@@ -1,5 +1,11 @@
 #pragma once
 #include "Vector.h"
+/*
+FUTURE TODO:
+------------
+Consider making functions directly modify the input vector.
+Current method of creating multiple copy-vector objects within functions can become expensive.
+*/
 
 namespace la {
 

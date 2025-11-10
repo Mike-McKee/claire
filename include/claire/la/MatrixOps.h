@@ -3,6 +3,13 @@
 #include <string>
 #include "Matrix.h"
 
+/*
+FUTURE TODO:
+------------
+Consider making functions directly modify the input matrix.
+Current method of creating multiple copy-vector objects within functions can become expensive.
+*/
+
 namespace la {
 
     void PrintMatrix(const Matrix& m);
