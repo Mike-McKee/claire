@@ -13,6 +13,7 @@ public:
     using size_type = std::size_t;
 
     //-------- Constructor --------
+    Vector() = default;
     explicit Vector(std::vector<double> v);
     Vector(size_type n, double value); // Creates n-dimension vector with same value for each entry
     // ~Vector();
