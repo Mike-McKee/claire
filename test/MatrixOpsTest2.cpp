@@ -50,7 +50,12 @@ int main() {
     std::cout << "\n\nREF is...\n\n";
     la::PrintMatrix(ref);
 
+    // -------- ReducedRowEchelonForm --------
+    std::cout << "\n-------- ReducedRowEchelonForm --------\n\n";
 
+    std::cout << "RREF for above Ref matrix is...\n\n";
+    la::Matrix rref = la::ReducedRowEchelonForm(ref);
+    la::PrintMatrix(rref);
 
     std::cout << std::endl;
     return 0;
