@@ -15,10 +15,10 @@ namespace la {
     Matrix MinorMatrix(const Matrix& m, const std::set<Matrix::size_type>& r, const std::set<Matrix::size_type>& c); // allow multiple delete rows/columns
     double Determinant(const Matrix& m);
 
-    // Matrix RowScale(const Matrix& m, Matrix::size_type& r);
-    // Matrix RowSwap(const Matrix& m, Matrix::size_type& r1, Matrix::size_type& r2);
-    // Matrix RowReplacement(const Matrix&m, Matrix::size_type& r1, Matrix::size_type& r2);
-    // Matrix RowEchelonForm(const Matrix& m);
+    Matrix RowScale(const Matrix& m, const Matrix::size_type& r);
+    Matrix RowSwap(const Matrix& m, const Matrix::size_type& r1, const Matrix::size_type& r2);
+    Matrix RowReplacement(const Matrix&m, const Matrix::size_type& r1, const Matrix::size_type& r2);
+    Matrix RowEchelonForm(const Matrix& m);
     // Matrix ReducedRowEchelonForm(const Matrix& m);
 
     // Matrix::size_type Rank(const Matrix& m);
