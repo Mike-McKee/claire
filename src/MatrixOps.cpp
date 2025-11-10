@@ -360,4 +360,132 @@ Matrix ReducedRowEchelonForm(const Matrix& m) {
 
 }
 
+Matrix::size_type Rank(const Matrix& m) {
+    /*
+    Rank of matrix is number of linearly independent rows/columns.
+    We can easily find rank by reducing matrix to REF and finding # of pivots
+    */
+
+    Matrix ref = RowEchelonForm(m);
+
+    Matrix::size_type r = ref.rowCount(); // Start with Rank = rowCount. Decrement below as needed
+    for (Vector& v : ref) {
+        if (isZeroVector(v)) {
+            r--;
+        }
+    }
+
+    return r;
+
+}
+
+bool isFullRank(const Matrix& m) {
+    /*
+    Full Rank of a mxn dimension matrix A means -> Rank(A) = min(m,n)
+    */
+    std::vector<Matrix::size_type> mDim = m.dimension();
+    Matrix::size_type minDim = std::min(mDim[0],mDim[1]);
+
+    Matrix::size_type mRank = Rank(m);
+
+    return (minDim == mRank);
+}
+
+Matrix AugmentedMatrix(const Matrix& m1, const Matrix& m2) {
+    // Need same row count for m1 and m2 to create augmented matrix
+    Matrix::size_type m1RowCount = m1.rowCount();
+    Matrix::size_type m1ColCount = m1.colCount();
+    Matrix::size_type m2RowCount = m2.rowCount();
+    Matrix::size_type m2ColCount = m2.colCount();
+    if (m1RowCount != m2RowCount) {
+        throw std::invalid_argument("Cannot create augmented matrix of matrices with different row dimension.");
+    }
+
+    Matrix am;
+
+    for (Matrix::size_type i = 0; i < m1RowCount; ++i) {
+        std::vector<double> cv;
+        cv.reserve(m1ColCount + m2ColCount);
+        const Vector& row1 = m1.row(i);
+        const Vector& row2 = m2.row(i);
+        cv.insert(cv.end(), row1.begin(), row1.end());
+        cv.insert(cv.end(), row2.begin(), row2.end());
+
+        Vector amRow(cv);
+        am.push_back(amRow);
+    }
+
+    return am;
+
+}
+
+Matrix AugmentedMatrixSplit(const Matrix& m, Matrix::size_type r, AmSide side) {
+    // Function takes a matrix and splits it at the r-index (exclusive). Return left or right side
+    Matrix ams;
+    Matrix::size_type b; // begin index (inclusive)
+    Matrix::size_type e; // end index (exclusive)
+
+    switch (side) {
+        case la::AmSide::L:
+            b = 0;
+            e = r;
+            break;
+        case la::AmSide::R:
+            b = r;
+            e = m.rowCount();
+    }
+    
+    for (Matrix::size_type i = 0; i < m.rowCount(); ++i) {
+        std::vector<double> row;
+        for (Matrix::size_type j = b; j < e; ++j) {
+            row.push_back(m.row(i)[j]);
+        }
+        ams.push_back(Vector(row));
+    }
+
+    return ams;
+}
+
+Matrix InverseMatrix(const Matrix & m) {
+    /*
+    Matrix A has an inverse only if the following are true:
+    1. It's a square matrix
+    2. Det(A) != 0
+    3. Rank(A) is full rank
+
+    If Matrix satisfies above, here's how to find Inverse:
+    ------------------------------------------------------
+    - 1-dimension matrix
+        - A = [a] and A^-1 = [1/a]
+    - 2-dimension matrix
+        - A = [[a,b],[c,d]] and A^-1 = (1/det(A)) * [[d,-b],[-c,a]]
+    - n-dimension matrix (where n > 2)
+        - Use Gaussian elimination...
+        - [A|I] --RREF--> [I|A^-1]
+        - Steps:
+            - Create Augmented Matrix with A and I (identity matrix)
+            - Reduce Augmented Matrix to RREF
+            - Left side becomes I and right side is A^-1
+    */
+    Matrix::size_type rc = m.rowCount();
+
+    if (rc != m.colCount()) {
+        throw std::invalid_argument("Can only find Inverse of a square matrix.");
+    }
+    else if (Determinant(m) == 0.0) {
+        throw std::invalid_argument("Determinant = 0, so matrix is not invertible.");
+    }
+    else if (!isFullRank(m)) {
+        throw std::invalid_argument("Matrix is not full rank, so there is no inverse matrix.");
+    }
+
+    Matrix ident(rc); // Initialize Identity matrix
+    Matrix am = AugmentedMatrix(m,ident);
+
+    Matrix amRREF = ReducedRowEchelonForm(am);
+    
+    return AugmentedMatrixSplit(amRREF,rc,la::AmSide::R);
+
+}
+
 }
