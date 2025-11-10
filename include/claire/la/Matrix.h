@@ -15,8 +15,7 @@ public:
     using size_type = std::size_t;
 
     // -------- Constructor --------
-    // Matrix(); // Empty matrix
-
+    Matrix() = default; // Empty matrix
     explicit Matrix(size_type rows, size_type cols); // Zero Matrix
     Matrix(size_type n); // Identity Matrix
     explicit Matrix(char axis, double degrees); // Create a 3D rotation matrix
@@ -50,6 +49,7 @@ public:
         rows_ = other.rows_;
         return *this;
     }
+    void push_back(const Vector& v);
 };
 
 }
