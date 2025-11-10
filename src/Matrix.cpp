@@ -118,4 +118,17 @@ Vector& Matrix::row(Matrix::size_type i) {
     return rows_[i];
 }
 
+void Matrix::push_back(const Vector& v) {
+    if (rows_.empty()) {
+        rows_.push_back(v);
+    }
+    else {
+        // verify v has same number of columns as other rows in matrix
+        if (v.size() != rows_[0].size()) {
+            throw std::invalid_argument("All rows in a matrix must have the same number of columns.");
+        }
+        rows_.push_back(v);
+    }
+}
+
 }
