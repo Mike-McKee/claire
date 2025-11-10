@@ -23,7 +23,6 @@ public:
     Matrix(const std::vector<Vector>& rows); // Matrix with specific values
     Matrix(const Matrix& other) = default; // Copy constructor
 
-
     // ~Matrix();
 
     
@@ -43,6 +42,12 @@ public:
     //-------- Operators --------
     const Vector& row(size_type i) const;
     Vector& row(size_type i);
+    Matrix& operator=(const Matrix& other) {
+        if (this == &other) {return *this;}
+
+        rows_ = other.rows_;
+        return *this;
+    }
 };
 
 }
