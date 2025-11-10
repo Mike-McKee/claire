@@ -184,35 +184,143 @@ double Determinant(const Matrix& m) {
     
 }
 
-// Matrix RowScale(const Matrix& m, Matrix::size_type& r) {
-//     double f = 0.0;
-//     for (double x : m.row(r)) {
-//         if (x != 0) {
-//             f = x;
-//             break;
-//         }
-//     }
+Matrix RowScale(const Matrix& m, const Matrix::size_type& r) {
+    double f = 0.0;
+    for (double x : m.row(r)) {
+        if (x != 0) {
+            f = x;
+            break;
+        }
+    }
 
-//     if (f == 0.0) {
-//         return m;
-//     }
-//     else {
-//         Matrix m2(m);
+    if (f == 0.0) {
+        return m;
+    }
+    else {
+        Matrix m2(m);
     
-//         for (double& c : m2.row(r)) {
-//             c /= f;
-//         }
-//     }
-// }
+        for (double& c : m2.row(r)) {
+            c /= f;
+        }
 
-// Matrix RowSwap(const Matrix& m, Matrix::size_type& r1, Matrix::size_type& r2) {
-//     Matrix rs(m);
-//     return std::swap(rs.row(r1),rs.row(r2));
-// }
+        return m2;
+    }
+}
+
+Matrix RowSwap(const Matrix& m, const Matrix::size_type& r1, const Matrix::size_type& r2) {
+    Matrix rs(m);
+    std::swap(rs.row(r1),rs.row(r2));
+    return rs;
+}
+
+Matrix RowReplacement(const Matrix&m, const Matrix::size_type& r1, const Matrix::size_type& r2) {
+    /*
+    r1 -> Index for target row (one being changed)
+    r2 -> Index for source/pivot row (one used to modify target row)
+    
+    Proper Row Replacement formula is R1 -> R1 + kR2, where k = -x/p -> (p = R2 pivot value, x = R1 value in R2's pivot column)
+    */
+    la::PrintVector(m.row(r1));
+    // If target or source row is zero vector, do nothing
+    if (la::isZeroVector(m.row(r1)) || la::isZeroVector(m.row(r2))) {
+        return m;
+    }
+
+    // Find source row's pivot column
+    Matrix::size_type sp;
+    for (Matrix::size_type i = 0; i < m.row(r2).size(); ++i) {
+        if (m.row(r2)[i] != 0.0) {
+            sp = i;
+            break;
+        }
+    }
+
+    // Check target row value at source's pivot column. If 0, we do nothing
+    if (m.row(r1)[sp] == 0.0) {
+        return m;
+    }
+
+    // Calculate k
+    double k = -1 * m.row(r1)[sp] / m.row(r2)[sp];
+
+    // Find new target row by 
+    std::vector<double> nr1;
+    for (Matrix::size_type j = 0; j < m.row(r1).size(); ++j) {
+        double newVal = m.row(r1)[j] + (k * m.row(r2)[j]);
+        if (abs(newVal) == 0.0) {
+            nr1.push_back(0.0);
+        }
+        else {
+            nr1.push_back(newVal);
+        }
+    }
+
+    // Initialize return matrix
+    la::Matrix rrm(m);
+    rrm.row(r1) = la::Vector(nr1);
+
+    return rrm;
+}
+
+Matrix RowEchelonForm(const Matrix& m) {
+    /*
+    Here are steps for the foward elimination algorithm to find REF:
+    ----------------------------------------------------------------------------
+    Step 1: Identify the pivot
+         -Start with the first column and top row
+        - Find the first nonzero entry in that column
+        - Swap rows, if needed, so the first nonzero entry is at the top.
+        - If no rows have a nonzero entry in this column, move one column to the right and repeat this step
+    Step 2: Create zeros for each element below the pivot
+        - Use row replacement to eliminate nonzero entries in the pivot column for all rows below the current pivot row
+    Step 3: Move to the next pivot column
+        - Move one row down and one column to the right
+    Step 4: Repeat
+        - Repeat steps 1-3 until you run out of rows or all remaining rows are zeros
+    */
+    Matrix::size_type rc = m.rowCount();
+    Matrix::size_type cc = m.colCount();
+    Matrix::size_type curr_r = 0;
+    Matrix::size_type curr_c = 0;
+
+    la::Matrix ref(m);
+    
+    while (curr_r < rc && curr_c < cc) {
+        // Check current row/col to see if it's a pivot
+        if (ref.row(curr_r)[curr_c] == 0.0) {
+
+            // Iterate through below rows to search for non-zero to swap with
+            for (Matrix::size_type i = curr_r + 1; i < rc; ++i) {
+                if (ref.row(i)[curr_c] != 0) {
+                    ref = RowSwap(ref,curr_r,i);
+                    break;
+                }
+            }
+
+            // If value is still 0, we have a free variable. Move to next column
+            if (ref.row(curr_r)[curr_c] == 0.0) {
+                curr_c++;
+                continue;
+            }
+        }
+
+        la::PrintMatrix(ref);
+        // Assume we have non-zero value, so we  use row replacement to remove entries below the pivot
+        for (Matrix::size_type i = curr_r + 1; i < rc; ++i) {
+            ref = RowReplacement(ref,i,curr_r);
+        }
+
+        // Increment our current row/col
+        curr_r++;
+        curr_c++;
+
+    }
+
+    return ref;
+
+}
 
 
-// Matrix RowReplacement(const Matrix&m, Matrix::size_type& r1, Matrix::size_type& r2);
-// Matrix RowEchelonForm(const Matrix& m);
 // Matrix ReducedRowEchelonForm(const Matrix& m);
 
 }
