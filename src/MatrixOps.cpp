@@ -1,6 +1,7 @@
 #include <stdexcept>
 #include <algorithm> //for std::find
 #include <cmath>
+#include <tuple>
 #include <iostream>
 #include "claire/la/VectorOps.h"
 #include "claire/la/MatrixOps.h"
@@ -220,7 +221,7 @@ Matrix RowReplacement(const Matrix&m, const Matrix::size_type& r1, const Matrix:
     
     Proper Row Replacement formula is R1 -> R1 + kR2, where k = -x/p -> (p = R2 pivot value, x = R1 value in R2's pivot column)
     */
-    la::PrintVector(m.row(r1));
+    
     // If target or source row is zero vector, do nothing
     if (la::isZeroVector(m.row(r1)) || la::isZeroVector(m.row(r2))) {
         return m;
@@ -265,7 +266,7 @@ Matrix RowReplacement(const Matrix&m, const Matrix::size_type& r1, const Matrix:
 Matrix RowEchelonForm(const Matrix& m) {
     /*
     Here are steps for the foward elimination algorithm to find REF:
-    ----------------------------------------------------------------------------
+    ----------------------------------------------------------------
     Step 1: Identify the pivot
          -Start with the first column and top row
         - Find the first nonzero entry in that column
@@ -304,7 +305,6 @@ Matrix RowEchelonForm(const Matrix& m) {
             }
         }
 
-        la::PrintMatrix(ref);
         // Assume we have non-zero value, so we  use row replacement to remove entries below the pivot
         for (Matrix::size_type i = curr_r + 1; i < rc; ++i) {
             ref = RowReplacement(ref,i,curr_r);
@@ -320,7 +320,44 @@ Matrix RowEchelonForm(const Matrix& m) {
 
 }
 
+Matrix ReducedRowEchelonForm(const Matrix& m) {
+    /*
+    Here are steps for the backward elimination algorithm to find RREF:
+    -------------------------------------------------------------------
+    Step 0:
+        - Execute RowEchelonForm() to get matrix in REF
+    Step 1:
+        - Start at the bottom-most pivot and use row scaling to set the pivot equal to 1 (if it’s not already 1)
+    Step 2:
+        - Use row replacement to make every entry above the pivot equal to 0
+    Step 3:
+        - Move to the next pivot above, and repeat the process until all pivots are equal to 1 and isolated in their columns
+    */
 
-// Matrix ReducedRowEchelonForm(const Matrix& m);
+    Matrix ref = RowEchelonForm(m);
+    std::vector<Matrix::size_type> refDim = ref.dimension();
+    std::vector<Matrix::size_type> pvts;
+
+    // Find pivots, starting with right-most
+    for (int r = refDim[0] - 1; r >= 0; --r) {
+        // make r int bc Matrix::size_type is signed, so --0 becomes a long long int. Use static_cast below to access elements
+        for (Matrix::size_type c = 0; c < refDim[1]; ++c) {
+            if (ref.row(static_cast<Matrix::size_type>(r))[c] != 0.0) {
+                pvts.push_back(static_cast<Matrix::size_type>(r));
+                break;
+            }
+        }
+    }
+
+    for (Matrix::size_type p : pvts) {
+        ref = RowScale(ref,p); // Scale row to have pivot = 1
+        for (Matrix::size_type k = 0; k < p; ++k) {
+            ref = RowReplacement(ref,k,p); // replace rows above to have pivot column val = 0
+        }
+    }
+
+    return ref;
+
+}
 
 }

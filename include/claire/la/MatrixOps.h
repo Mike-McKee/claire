@@ -26,7 +26,7 @@ namespace la {
     Matrix RowSwap(const Matrix& m, const Matrix::size_type& r1, const Matrix::size_type& r2);
     Matrix RowReplacement(const Matrix&m, const Matrix::size_type& r1, const Matrix::size_type& r2);
     Matrix RowEchelonForm(const Matrix& m);
-    // Matrix ReducedRowEchelonForm(const Matrix& m);
+    Matrix ReducedRowEchelonForm(const Matrix& m);
 
     // Matrix::size_type Rank(const Matrix& m);
     // bool isFullRank(const Matrix& m);
