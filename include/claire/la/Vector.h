@@ -23,6 +23,8 @@ public:
     std::vector<double>::iterator end() {return data_.end();}
     std::vector<double>::const_iterator begin() const { return data_.begin(); }
     std::vector<double>::const_iterator end()   const { return data_.end(); }
+    // std::vector<double>::reverse_iterator rbegin() {return data_.rbegin();}
+    // std::vector<double>::reverse_iterator rend() {return data_.rend();}
 
     //-------- Object Info --------
     size_type size() const;
