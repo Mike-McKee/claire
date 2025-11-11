@@ -606,7 +606,81 @@ double Trace(const Matrix& m) {
 bool isSymmetric(const Matrix& m) {
     // Note: we need to add a "==" operator to Matrix class to compare two matrices
     // On above, we also need a "==" operator for the Vector class
+    Matrix mT = Transpose(m);
+
+    return m == mT;
+}
+
+bool isDiagonal(const Matrix& m) {
+    if (!isSquareMatrix(m) || !isZeroMatrix(m)) {
+        return false;
+    }
+    std::vector<Matrix::size_type> mDim = m.dimension();
+    for (Matrix::size_type i = 0; i < mDim[0]; ++i) {
+        for (Matrix::size_type j = 0; j < mDim[1]; ++j) {
+            if (i != j && m.row(i)[j] != 0.0) {
+                return false;
+            }
+        }
+    }
+
     return true;
+}
+
+bool isTriangular(const Matrix& m) {
+    if (!isSquareMatrix(m)) {
+        return false;
+    }
+
+    Matrix::size_type mRowCount = m.rowCount();
+    bool isUpper = true;
+    bool isLower = true;
+
+    for (Matrix::size_type i = 0; i < mRowCount; ++i) {
+        for (Matrix::size_type j = 0; j < mRowCount; ++j) {
+            if (i > j && m.row(i)[j] != 0.0) {
+                isUpper = false;
+            }
+            if (i < j && m.row(i)[j] != 0.0) {
+                isLower = false;
+            }
+        }
+    }
+    
+    return isUpper || isLower;
+}
+
+std::vector<TriangularMatrixType> TriangularType(const Matrix& m) {
+    if (!isTriangular(m)) {
+        throw std::invalid_argument("Matrix is not Triangular.");
+    }
+
+    Matrix::size_type mRowCount = m.rowCount();
+    bool isUpper = true;
+    bool isLower = true;
+
+    std::vector<TriangularMatrixType> tt;
+
+    for (Matrix::size_type i = 0; i < mRowCount; ++i) {
+        for (Matrix::size_type j = 0; j < mRowCount; ++j) {
+            if (i > j && m.row(i)[j] != 0.0) {
+                isUpper = false;
+            }
+            if (i < j && m.row(i)[j] != 0.0) {
+                isLower = false;
+            }
+        }
+    }
+
+    if (isUpper) {
+        tt.push_back(TriangularMatrixType::Upper);
+    }
+    
+    if (isLower) {
+        tt.push_back(TriangularMatrixType::Lower);
+    }
+
+    return tt;
 }
 
 }

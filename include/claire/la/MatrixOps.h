@@ -44,8 +44,9 @@ namespace la {
     Vector Diagonal(const Matrix& m);
     double Trace(const Matrix& m);
     bool isSymmetric(const Matrix& m);
-    // bool isDiagonal(const Matrix& m);
-    // bool isTriangular(const Matrix& m);
-    // std::string TriangularType(const Matrix& m);
+    bool isDiagonal(const Matrix& m);
+    bool isTriangular(const Matrix& m);
+    enum class TriangularMatrixType { Upper, Lower};
+    std::vector<TriangularMatrixType> TriangularType(const Matrix& m);
 
 }
