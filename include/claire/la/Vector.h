@@ -33,6 +33,9 @@ public:
 
     double operator[](size_type i) const { return data_[i]; }
     double& operator[](size_type i) { return data_[i]; }
+    bool operator==(const Vector& other) const {
+        return this->data_ == other.data_;
+    }
 };
 
 }

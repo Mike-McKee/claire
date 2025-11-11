@@ -49,6 +49,9 @@ public:
         return *this;
     }
     void push_back(const Vector& v);
+    bool operator==(const Matrix& other) const {
+        return this->rows_ == other.rows_;
+    }
 };
 
 }
