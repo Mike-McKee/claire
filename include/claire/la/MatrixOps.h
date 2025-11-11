@@ -14,6 +14,10 @@ namespace la {
 
     void PrintMatrix(const Matrix& m);
     
+    bool isSquareMatrix(const Matrix& m);
+    bool isZeroMatrix(const Matrix& m);
+    bool isIdentityMatrix(const Matrix& m);
+
     Matrix MatrixAddition(const Matrix& m1, const Matrix& m2);
     Matrix MatrixSubtraction(const Matrix& m1, const Matrix& m2);
     Matrix ScalarMultiplication(const Matrix& m, double k);
@@ -34,11 +38,12 @@ namespace la {
     enum class AmSide { L, R };
     Matrix AugmentedMatrixSplit(const Matrix& m, Matrix::size_type r, AmSide side);
     Matrix InverseMatrix(const Matrix & m);
-    // Matrix Transpose(const Matrix& m);
-    // bool isOrthogonal(const Matrix& m1, const Matrix& m2);
-    // Vector Diagonal(const Matrix& m);
-    // double Trace(const Matrix& m);
-    // bool isSymmetric(const Matrix& m);
+    Matrix Transpose(const Matrix& m);
+    bool isOrthogonal(const Matrix& m1, const Matrix& m2);
+    bool isOrthonormal(const Matrix&m);
+    Vector Diagonal(const Matrix& m);
+    double Trace(const Matrix& m);
+    bool isSymmetric(const Matrix& m);
     // bool isDiagonal(const Matrix& m);
     // bool isTriangular(const Matrix& m);
     // std::string TriangularType(const Matrix& m);
