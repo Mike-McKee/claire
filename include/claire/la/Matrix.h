@@ -38,7 +38,6 @@ public:
     std::vector<size_type> dimension() const;
     size_type rowCount() const;
     size_type colCount() const;
-    // bool isZeroVector() const;
 
     //-------- Operators --------
     const Vector& row(size_type i) const;
