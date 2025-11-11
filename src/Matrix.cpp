@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <utility>
 #include <cmath>
-// #include "claire/la/Vector.h"
+#include "claire/la/VectorOps.h"
 #include "claire/la/Matrix.h"
 
 namespace la {
@@ -130,5 +130,6 @@ void Matrix::push_back(const Vector& v) {
         rows_.push_back(v);
     }
 }
+
 
 }
