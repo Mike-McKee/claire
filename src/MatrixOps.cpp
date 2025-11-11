@@ -15,6 +15,44 @@ void PrintMatrix(const Matrix& m) {
     }
 }
 
+
+bool isSquareMatrix(const Matrix& m) {
+    if (m.rowCount() == m.colCount()) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+bool isZeroMatrix(const Matrix& m) {
+    for (const Vector& r : m) {
+        if (!isZeroVector(r)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool isIdentityMatrix(const Matrix& m) {
+    if (!isSquareMatrix(m)) {
+        return false;
+    }
+
+    std::vector<Matrix::size_type> mDim = m.dimension();
+
+    for (Matrix::size_type i = 0; i < mDim[0]; ++i) {
+        for (Matrix::size_type j = 0; j < mDim[1]; ++j) {
+            if (m.row(i)[j] != 1.0) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
 Matrix MatrixAddition(const Matrix& m1, const Matrix& m2) {
     std::vector<Matrix::size_type> m1Dim = m1.dimension();
     std::vector<Matrix::size_type> m2Dim = m2.dimension();
@@ -486,6 +524,89 @@ Matrix InverseMatrix(const Matrix & m) {
     
     return AugmentedMatrixSplit(amRREF,rc,la::AmSide::R);
 
+}
+
+Matrix Transpose(const Matrix& m) {
+    /*
+    Transpose swaps all columns into rows
+    */
+    Matrix::size_type mRowCount = m.rowCount();
+    Matrix::size_type mColCount = m.colCount();
+    Matrix t; // Initialize tranpose matrix
+
+    // Loop through each column, create new Vector, add to t
+    for (Matrix::size_type i = 0; i < mColCount; ++i) {
+        std::vector<double> t_row;
+        t_row.reserve(mColCount);
+
+        for (Matrix::size_type j = 0; j < mRowCount; ++j) {
+            t_row.push_back(m.row(j)[i]);
+        }
+
+        t.push_back(Vector(t_row));
+    }
+
+    return t;
+}
+
+bool isOrthogonal(const Matrix& m1, const Matrix& m2) {
+    /*
+    Two Matrices, A and B are orthogonal if their matrix product satisfies -> A^T B = 0
+    Aka -> A-transpose multiplied by B = 0
+    */
+    Matrix m1Transpose = Transpose(m1);
+    Matrix mm = MatrixMultiplication(m1Transpose,m2);
+
+    //NOTE: NEED TO ADD ZERO MATRIX METHOD TO MATRIX.H
+    return isZeroMatrix(mm);
+}
+
+bool isOrthonormal(const Matrix&m) {
+    /*
+    Matrix A is orthonormal if:
+        - A is square (n-dimension)
+        - A^T multiplied by A = I (identity matrix in n-dimension)
+    */
+    if (!isSquareMatrix(m)) {
+        return false;
+    }
+
+    Matrix mT = Transpose(m);
+    Matrix mm = MatrixMultiplication(m,mT);
+
+    return isIdentityMatrix(mm);
+
+}
+
+Vector Diagonal(const Matrix& m) {
+    if (!isSquareMatrix(m)) {
+        throw std::invalid_argument("Can only find diagonal of a square matrix.");
+    }
+    Matrix::size_type mRowCount = m.rowCount();
+    std::vector<double> d;
+    d.reserve(mRowCount);
+
+    for (Matrix::size_type i = 0; i < mRowCount; ++i) {
+        d.push_back(m.row(i)[i]);
+    }
+
+    return Vector(d);
+}
+
+double Trace(const Matrix& m) {
+    Vector d = Diagonal(m);
+    double t;
+    for (double e : d) {
+        t += e;
+    }
+
+    return t;
+}
+
+bool isSymmetric(const Matrix& m) {
+    // Note: we need to add a "==" operator to Matrix class to compare two matrices
+    // On above, we also need a "==" operator for the Vector class
+    return true;
 }
 
 }
