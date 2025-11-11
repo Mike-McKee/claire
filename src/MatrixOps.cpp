@@ -286,12 +286,13 @@ Matrix RowReplacement(const Matrix&m, const Matrix::size_type& r1, const Matrix:
     std::vector<double> nr1;
     for (Matrix::size_type j = 0; j < m.row(r1).size(); ++j) {
         double newVal = m.row(r1)[j] + (k * m.row(r2)[j]);
-        if (abs(newVal) == 0.0) {
-            nr1.push_back(0.0);
-        }
-        else {
-            nr1.push_back(newVal);
-        }
+        nr1.push_back(newVal);
+        // if (abs(newVal) == 0.0) { // This logic converted double to int
+        //     nr1.push_back(0.0);
+        // }
+        // else {
+        //     nr1.push_back(newVal);
+        // }
     }
 
     // Initialize return matrix
@@ -405,7 +406,7 @@ Matrix::size_type Rank(const Matrix& m) {
     */
 
     Matrix ref = RowEchelonForm(m);
-
+    
     Matrix::size_type r = ref.rowCount(); // Start with Rank = rowCount. Decrement below as needed
     for (Vector& v : ref) {
         if (isZeroVector(v)) {
@@ -423,7 +424,6 @@ bool isFullRank(const Matrix& m) {
     */
     std::vector<Matrix::size_type> mDim = m.dimension();
     Matrix::size_type minDim = std::min(mDim[0],mDim[1]);
-
     Matrix::size_type mRank = Rank(m);
 
     return (minDim == mRank);
@@ -470,7 +470,8 @@ Matrix AugmentedMatrixSplit(const Matrix& m, Matrix::size_type r, AmSide side) {
             break;
         case la::AmSide::R:
             b = r;
-            e = m.rowCount();
+            e = m.colCount();
+            break;
     }
     
     for (Matrix::size_type i = 0; i < m.rowCount(); ++i) {
@@ -523,7 +524,7 @@ Matrix InverseMatrix(const Matrix & m) {
     Matrix amRREF = ReducedRowEchelonForm(am);
     
     return AugmentedMatrixSplit(amRREF,rc,la::AmSide::R);
-
+    // return amRREF;
 }
 
 Matrix Transpose(const Matrix& m) {
