@@ -83,9 +83,75 @@ int main() {
     la::Matrix am1Transpose = la::Transpose(am1);
     la::PrintMatrix(am1Transpose);
 
+    // -------- isOrthonormal --------
+    std::cout << "\n-------- isOrthonormal--------\n\n";
+    la::Vector on1_1(std::vector<double>{0,1});
+    la::Vector on1_2(std::vector<double>{-1,0});
+    la::Matrix on1({on1_1,on1_2});
+
+    std::cout << "Following matrix should be orthonormal...\n";
+    la::PrintMatrix(on1);
+    std::cout << "Result from isOrthonormal() is " << std::boolalpha << la::isOrthonormal(on1) << "\n";
+
+    // -------- Diagnoal --------
+    std::cout << "\n-------- Diagonal--------\n\n";
+
+    std::cout << "Find diagonal of below matrix...\n\n";
+    la::PrintMatrix(am1);
+    std::cout << "\nThe diagonal of the above is ";
+    la::PrintVector(la::Diagonal(am1));
+    std::cout << "\n\n";
+
+    // -------- Trace --------
+    std::cout << "\n-------- Trace --------\n\n";
+    std::cout << "The trace of the above matrix is " << la::Trace(am1) << "\n\n";
+
+
     // -------- isOrthogonal --------
     std::cout << "\n-------- isOrthogonal--------\n\n";
-    
+    la::Vector og1_1(std::vector<double>{4,3});
+    la::Vector og1_2(std::vector<double>{-1,-2});
+    la::Vector og2_1(std::vector<double>{5,0});
+    la::Vector og2_2(std::vector<double>{0,10});
+
+    la::Matrix og1({og1_1,og1_2});
+    la::Matrix og2({og2_1,og2_2});
+
+    std::cout << "isOrthogonal = " << std::boolalpha << la::isOrthogonal(og1,og2) << "\n";
+
+    // -------- isSymmetric --------
+    std::cout << "\n-------- isSymmetric --------\n\n";
+    la::Vector sym1(std::vector<double>{1,2,3});
+    la::Vector sym2(std::vector<double>{2,0,4});
+    la::Vector sym3(std::vector<double>{3,4,1});
+    la::Matrix sym({sym1,sym2,sym3});
+    std::cout << "isSymmetric = " << std::boolalpha << la::isSymmetric(sym) << "\n";
+
+    // -------- isTriangular --------
+    std::cout << "\n-------- isTriangular --------\n\n";
+    la::Vector tri1(std::vector<double>{1,0,0,0});
+    la::Vector tri2(std::vector<double>{0,2,0,0});
+    la::Vector tri3(std::vector<double>{0,0,3,0});
+    la::Vector tri4(std::vector<double>{0,0,0,4});
+    la::Matrix tri({tri1,tri2,tri3,tri4});
+    std::cout << "isTriangular = " << std::boolalpha << la::isTriangular(tri) << "\n";
+
+    // -------- TriangularType --------
+    std::cout << "\n-------- TriangularType --------\n\n";
+    std::vector<std::string> tt = la::TriangularType(tri);
+    for (std::string typ : tt) {
+        std::cout << typ << ", ";
+    }
+
+    // -------- isDiagonal --------
+    std::cout << "\n-------- isDiagonal --------\n\n";
+    la::Vector diag1(std::vector<double>{0,1,0,0});
+    la::Vector diag2(std::vector<double>{0,0,0,0});
+    la::Vector diag3(std::vector<double>{0,0,0,0});
+    la::Vector diag4(std::vector<double>{0,0,0,0});
+    la::Matrix diag({diag1,diag2,diag3,diag4});
+    std::cout << "isDiagonal = " << std::boolalpha << la::isDiagonal(diag) << "\n";
+
     std::cout << std::endl;
     return 0;
 }
