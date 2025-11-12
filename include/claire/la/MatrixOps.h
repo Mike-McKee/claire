@@ -46,7 +46,7 @@ namespace la {
     bool isSymmetric(const Matrix& m);
     bool isDiagonal(const Matrix& m);
     bool isTriangular(const Matrix& m);
-    enum class TriangularMatrixType { Upper, Lower};
-    std::vector<TriangularMatrixType> TriangularType(const Matrix& m);
+    enum class TriangularMatrixType { Upper, Lower };
+    std::vector<std::string> TriangularType(const Matrix& m);
 
 }

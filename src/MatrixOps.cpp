@@ -617,7 +617,7 @@ bool isSymmetric(const Matrix& m) {
 }
 
 bool isDiagonal(const Matrix& m) {
-    if (!isSquareMatrix(m) || !isZeroMatrix(m)) {
+    if (!isSquareMatrix(m)) {
         return false;
     }
     std::vector<Matrix::size_type> mDim = m.dimension();
@@ -655,7 +655,7 @@ bool isTriangular(const Matrix& m) {
     return isUpper || isLower;
 }
 
-std::vector<TriangularMatrixType> TriangularType(const Matrix& m) {
+std::vector<std::string> TriangularType(const Matrix& m) {
     if (!isTriangular(m)) {
         throw std::invalid_argument("Matrix is not Triangular.");
     }
@@ -664,7 +664,7 @@ std::vector<TriangularMatrixType> TriangularType(const Matrix& m) {
     bool isUpper = true;
     bool isLower = true;
 
-    std::vector<TriangularMatrixType> tt;
+    std::vector<std::string> tt;
 
     for (Matrix::size_type i = 0; i < mRowCount; ++i) {
         for (Matrix::size_type j = 0; j < mRowCount; ++j) {
@@ -678,11 +678,11 @@ std::vector<TriangularMatrixType> TriangularType(const Matrix& m) {
     }
 
     if (isUpper) {
-        tt.push_back(TriangularMatrixType::Upper);
+        tt.push_back("Upper");
     }
     
     if (isLower) {
-        tt.push_back(TriangularMatrixType::Lower);
+        tt.push_back("Lower");
     }
 
     return tt;
