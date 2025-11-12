@@ -33,7 +33,7 @@ public:
     size_type size() const;
     bool isEmpty() const;
 
-    void operator+=(const Vector& other) {
+    Vector& operator+=(const Vector& other) {
         if (size() != other.size()) {
             throw std::invalid_argument("Vectors must be same size for vector addition.");
         }
@@ -41,7 +41,7 @@ public:
             data_[i] += other[i];
         }
     }
-    void operator-=(const Vector& other) {
+    Vector& operator-=(const Vector& other) {
         if (size() != other.size()) {
             throw std::invalid_argument("Vectors must be the same size for vector subtraction.");
         }
@@ -49,12 +49,12 @@ public:
             data_[i] -= other[i];
         }
     }
-    void operator*=(const double& k) {
+    Vector& operator*=(const double& k) {
         for (size_type i =0; i < size(); ++i) {
             data_[i] *= k;
         }
     }
-    void operator=(const Vector& other) {
+    Vector& operator=(const Vector& other) {
         data_ = std::move(other.data_);
     }
     double operator[](size_type i) const { return data_[i]; }
