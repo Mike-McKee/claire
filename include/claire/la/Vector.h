@@ -1,4 +1,5 @@
 #pragma once
+#include <stdexcept>
 #include <vector>
 #include <cstddef> // size_t
 
@@ -14,6 +15,7 @@ public:
 
     //-------- Constructor --------
     Vector() = default;
+    Vector(std::initializer_list<double> data);
     explicit Vector(std::vector<double> v);
     Vector(size_type n, double value); // Creates n-dimension vector with same value for each entry
     // ~Vector();
@@ -31,11 +33,65 @@ public:
     size_type size() const;
     bool isEmpty() const;
 
+    void operator+=(const Vector& other) {
+        if (size() != other.size()) {
+            throw std::invalid_argument("Vectors must be same size for vector addition.");
+        }
+        for (size_type i = 0; i < size(); ++i) {
+            data_[i] += other[i];
+        }
+    }
+    void operator-=(const Vector& other) {
+        if (size() != other.size()) {
+            throw std::invalid_argument("Vectors must be the same size for vector subtraction.");
+        }
+        for (size_type i = 0; i < size(); ++i) {
+            data_[i] -= other[i];
+        }
+    }
+    void operator*=(const double& k) {
+        for (size_type i =0; i < size(); ++i) {
+            data_[i] *= k;
+        }
+    }
+    void operator=(const Vector& other) {
+        data_ = std::move(other.data_);
+    }
     double operator[](size_type i) const { return data_[i]; }
     double& operator[](size_type i) { return data_[i]; }
     bool operator==(const Vector& other) const {
         return this->data_ == other.data_;
     }
 };
+
+Vector operator+(Vector u, const Vector& v) {
+    if (u.size() != v.size()) {
+        throw std::invalid_argument("Vectors must be the same size for vector addition.");
+    }
+    for (Vector::size_type i = 0; i < u.size(); ++i) {
+        u[i] += v[i];
+    }
+
+    return u;
+}
+
+Vector operator-(Vector u, const Vector& v) {
+    if (u.size() != v.size()) {
+        throw std::invalid_argument("Vectors must be the same size for vector addition.");
+    }
+    for (Vector::size_type i = 0; i < u.size(); ++i) {
+        u[i] -= v[i];
+    }
+
+    return u;
+}
+
+Vector operator*(Vector u, const double& k) {
+    for (Vector::size_type i = 0; i < u.size(); ++i) {
+        u[i] *= k;
+    }
+
+    return u;
+}
 
 }

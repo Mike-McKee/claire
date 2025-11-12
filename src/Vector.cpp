@@ -4,6 +4,8 @@
 
 namespace la {
 
+Vector::Vector(std::initializer_list<double> data) : data_(std::move(data)) {}
+
 Vector::Vector(std::vector<double> v) : data_(std::move(v)) {}
 
 Vector::Vector(Vector::size_type n, double value) : data_(n,value) {}
