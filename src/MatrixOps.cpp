@@ -44,7 +44,10 @@ bool isIdentityMatrix(const Matrix& m) {
 
     for (Matrix::size_type i = 0; i < mDim[0]; ++i) {
         for (Matrix::size_type j = 0; j < mDim[1]; ++j) {
-            if (m.row(i)[j] != 1.0) {
+            if (i != j && m.row(i)[j] != 0.0) {
+                return false;
+            }
+            else if (i == j && m.row(i)[j] != 1.0) {
                 return false;
             }
         }
@@ -550,33 +553,22 @@ Matrix Transpose(const Matrix& m) {
     return t;
 }
 
-bool isOrthogonal(const Matrix& m1, const Matrix& m2) {
-    /*
-    Two Matrices, A and B are orthogonal if their matrix product satisfies -> A^T B = 0
-    Aka -> A-transpose multiplied by B = 0
-    */
-    Matrix m1Transpose = Transpose(m1);
-    Matrix mm = MatrixMultiplication(m1Transpose,m2);
-
-    //NOTE: NEED TO ADD ZERO MATRIX METHOD TO MATRIX.H
-    return isZeroMatrix(mm);
-}
 
 bool isOrthonormal(const Matrix&m) {
     /*
     Matrix A is orthonormal if:
-        - A is square (n-dimension)
-        - A^T multiplied by A = I (identity matrix in n-dimension)
+    - A is square (n-dimension)
+    - A^T multiplied by A = I (identity matrix in n-dimension)
     */
-    if (!isSquareMatrix(m)) {
-        return false;
+   if (!isSquareMatrix(m)) {
+       return false;
     }
-
+    
     Matrix mT = Transpose(m);
-    Matrix mm = MatrixMultiplication(m,mT);
-
+    Matrix mm = MatrixMultiplication(mT,m);
+    
     return isIdentityMatrix(mm);
-
+    
 }
 
 Vector Diagonal(const Matrix& m) {
@@ -586,11 +578,11 @@ Vector Diagonal(const Matrix& m) {
     Matrix::size_type mRowCount = m.rowCount();
     std::vector<double> d;
     d.reserve(mRowCount);
-
+    
     for (Matrix::size_type i = 0; i < mRowCount; ++i) {
         d.push_back(m.row(i)[i]);
     }
-
+    
     return Vector(d);
 }
 
@@ -600,8 +592,20 @@ double Trace(const Matrix& m) {
     for (double e : d) {
         t += e;
     }
-
+    
     return t;
+}
+
+bool isOrthogonal(const Matrix& m1, const Matrix& m2) {
+    /*
+    Two Matrices, A and B are orthogonal if their inner product equals 0.
+    That is  -> trace(A^T x B) = 0
+    */
+    Matrix m1Transpose = Transpose(m1);
+    Matrix mm = MatrixMultiplication(m1Transpose,m2);
+
+    double t = Trace(mm);
+    return t == 0.0;
 }
 
 bool isSymmetric(const Matrix& m) {
