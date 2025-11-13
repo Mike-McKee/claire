@@ -16,6 +16,7 @@ public:
 
     // -------- Constructor --------
     Matrix() = default; // Empty matrix
+    Matrix(std::initializer_list<Vector> rows);
     explicit Matrix(size_type rows, size_type cols); // Zero Matrix
     Matrix(size_type n); // Identity Matrix
     explicit Matrix(char axis, double degrees); // Create a 3D rotation matrix
@@ -38,20 +39,131 @@ public:
     std::vector<size_type> dimension() const;
     size_type rowCount() const;
     size_type colCount() const;
-
-    //-------- Operators --------
     const Vector& row(size_type i) const;
     Vector& row(size_type i);
+    
+    void push_back(const Vector& v);
+
+    //-------- Operators --------
+    Vector operator[](size_type i) const { return rows_[i]; }
+    Vector& operator[](size_type i) { return rows_[i]; }
     Matrix& operator=(const Matrix& other) {
         if (this == &other) {return *this;}
 
         rows_ = other.rows_;
         return *this;
     }
-    void push_back(const Vector& v);
     bool operator==(const Matrix& other) const {
         return this->rows_ == other.rows_;
     }
+    Matrix& operator+=(const Matrix& other) {
+        if (dimension() != other.dimension()) {
+            throw std::invalid_argument("Matrices must have same dimension for Matrix Addition.");
+        }
+        for (size_type i = 0; i < rowCount(); ++i) {
+            for (size_type j = 0; j < colCount(); ++j) {
+                rows_[i][j] += other[i][j];
+            }
+        }
+
+        return *this;
+    }
+    Matrix& operator-=(const Matrix& other) {
+        if (dimension() != other.dimension()) {
+            throw std::invalid_argument("Matrices must have same dimension for Matrix Addition.");
+        }
+        for (size_type i = 0; i < rowCount(); ++i) {
+            for (size_type j = 0; j < colCount(); ++j) {
+                rows_[i][j] -= other[i][j];
+            }
+        }
+
+        return *this;
+    }
+    Matrix& operator*=(const double& k) {
+        for (size_type i = 0; i < rowCount(); ++i) {
+            for (size_type j = 0; j < colCount(); ++j) {
+                rows_[i][j] *= k;
+            }
+        }
+
+        return *this;
+    }
+    Matrix& operator*=(const Matrix& other) {
+        if (colCount() != other.rowCount()) {
+            throw std::invalid_argument("Left matrix column count must equal right matrix row count for Matrix Multiplication.");
+        }
+        std::vector<size_type> this_dim = dimension();
+        std::vector<size_type> other_dim = other.dimension();
+        
+        for (size_type i = 0; i < this_dim[0]; ++i) {
+            Vector r;
+            r.reserve(other_dim[1]);
+            for (size_type j = 0; j < other_dim[1]; ++j) {
+                double entry = 0.0;
+                for (size_type k = 0; k < this_dim[1]; ++k) {
+                    entry += rows_[i][k] * other[k][j];
+                }
+                r.push_back(entry); //need to add to vector class
+            }
+            rows_.push_back(r);
+        }
+
+        return *this;
+    }
 };
+
+Matrix operator+(Matrix a, const Matrix& b) {
+    if (a.dimension() != b.dimension()) {
+        throw std::invalid_argument("Matrices must have same dimension for Matrix Addition.");
+    }
+    for (Matrix::size_type i = 0; i < a.rowCount(); ++i) {
+        for (Matrix::size_type j = 0; j < a.colCount(); ++j) {
+            a[i][j] += b[i][j];
+        }
+    }
+    return a;
+}
+
+Matrix operator-(Matrix a, const Matrix& b) {
+    if (a.dimension() != b.dimension()) {
+        throw std::invalid_argument("Matrices must have same dimension for Matrix Subtraction.");
+    }
+    for (Matrix::size_type i = 0; i < a.rowCount(); ++i) {
+        for (Matrix::size_type j = 0; j < a.colCount(); ++j) {
+            a[i][j] -= b[i][j];
+        }
+    }
+    return a;
+}
+
+Matrix operator*(Matrix a, const double& k) {
+    for (Matrix::size_type i = 0; i < a.rowCount(); ++i) {
+        for (Matrix::size_type j = 0; j < a.colCount(); ++j) {
+            a[i][j] *= k;
+        }
+    }
+
+    return a;
+}
+
+Matrix operator*(Matrix a, const Matrix& b) {
+    if (a.colCount() != b.rowCount()) {
+        throw std::invalid_argument("Left matrix column count must equal right matrix row count for Matrix Multiplication.");
+    }
+    std::vector<Matrix::size_type> a_dim = a.dimension();
+    std::vector<Matrix::size_type> b_dim = b.dimension();
+    
+    for (Matrix::size_type i = 0; i < a_dim[0]; ++i) {
+        for (Matrix::size_type j = 0; j < b_dim[1]; ++j) {
+            double entry = 0.0;
+            for (Matrix::size_type k = 0; k < a_dim[1]; ++k) {
+                a[i][k] *= b[k][j];
+            }
+        }
+    }
+
+    return a;
+}
 
 }
