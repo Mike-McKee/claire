@@ -8,6 +8,8 @@
 
 namespace la {
 
+Matrix::Matrix(std::initializer_list<Vector> rows) : rows_(std::move(rows)) {}
+
 Matrix::Matrix(Matrix::size_type rows, Matrix::size_type cols) {
     if (rows == 0 || cols == 0) {
         throw std::invalid_argument("Matrix dimensions must be > 0.");
