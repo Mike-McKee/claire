@@ -43,6 +43,7 @@ public:
     Vector& row(size_type i);
     
     void push_back(const Vector& v);
+    void reserve(size_type s);
 
     //-------- Operators --------
     Vector operator[](size_type i) const { return rows_[i]; }
@@ -96,6 +97,9 @@ public:
         std::vector<size_type> this_dim = dimension();
         std::vector<size_type> other_dim = other.dimension();
         
+        std::vector<Vector> new_this;
+        new_this.reserve(this_dim[0]);
+
         for (size_type i = 0; i < this_dim[0]; ++i) {
             Vector r;
             r.reserve(other_dim[1]);
@@ -106,9 +110,10 @@ public:
                 }
                 r.push_back(entry); //need to add to vector class
             }
-            rows_.push_back(r);
+            new_this.push_back(r);
         }
 
+        rows_ = std::move(new_this);
         return *this;
     }
 };
@@ -153,16 +158,24 @@ Matrix operator*(Matrix a, const Matrix& b) {
     }
     std::vector<Matrix::size_type> a_dim = a.dimension();
     std::vector<Matrix::size_type> b_dim = b.dimension();
-    
+
+    Matrix m;
+    m.reserve(a_dim[0]);
+
     for (Matrix::size_type i = 0; i < a_dim[0]; ++i) {
+        Vector r;
+        r.reserve(b_dim[1]);
         for (Matrix::size_type j = 0; j < b_dim[1]; ++j) {
             double entry = 0.0;
             for (Matrix::size_type k = 0; k < a_dim[1]; ++k) {
-                a[i][k] *= b[k][j];
+                entry += a[i][k] *= b[k][j];
             }
+            r.push_back(entry);
         }
+        m.push_back(r);
     }
 
+    a = m;
     return a;
 }
 
