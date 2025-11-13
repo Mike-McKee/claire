@@ -25,4 +25,12 @@ bool Vector::isEmpty() const{
     else {return false;}
 }
 
+void Vector::push_back(const double& d) {
+    data_.push_back(d);
+}
+
+void Vector::reserve(Vector::size_type s) {
+    data_.reserve(s);
+}
+
 }

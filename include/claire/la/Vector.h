@@ -3,6 +3,13 @@
 #include <vector>
 #include <cstddef> // size_t
 
+/*
+TODO:
+- Add a reserve() function that allows us to reserve size for vector
+    - This will help for certain operations, especially regarding Vectors in matrices
+- Add a push_back() function to add elements to a vector (similar to std::vector push_back())
+*/
+
 namespace la {
 
 class Vector
@@ -33,6 +40,10 @@ public:
     size_type size() const;
     bool isEmpty() const;
 
+    void push_back(const double& d);
+    void reserve(size_type s);
+
+    //-------- Operators --------
     Vector& operator+=(const Vector& other) {
         if (size() != other.size()) {
             throw std::invalid_argument("Vectors must be same size for vector addition.");
@@ -40,6 +51,7 @@ public:
         for (size_type i = 0; i < size(); ++i) {
             data_[i] += other[i];
         }
+        return *this;
     }
     Vector& operator-=(const Vector& other) {
         if (size() != other.size()) {
@@ -48,14 +60,17 @@ public:
         for (size_type i = 0; i < size(); ++i) {
             data_[i] -= other[i];
         }
+        return *this;
     }
     Vector& operator*=(const double& k) {
         for (size_type i =0; i < size(); ++i) {
             data_[i] *= k;
         }
+        return *this;
     }
     Vector& operator=(const Vector& other) {
         data_ = std::move(other.data_);
+        return *this;
     }
     double operator[](size_type i) const { return data_[i]; }
     double& operator[](size_type i) { return data_[i]; }
