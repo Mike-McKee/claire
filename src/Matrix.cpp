@@ -133,5 +133,8 @@ void Matrix::push_back(const Vector& v) {
     }
 }
 
+void Matrix::reserve(Matrix::size_type s) {
+    rows_.reserve(s);
+}
 
 }
