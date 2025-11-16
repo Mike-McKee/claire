@@ -18,10 +18,6 @@ namespace la {
     bool isZeroMatrix(const Matrix& m);
     bool isIdentityMatrix(const Matrix& m);
 
-    Matrix MatrixAddition(const Matrix& m1, const Matrix& m2);
-    Matrix MatrixSubtraction(const Matrix& m1, const Matrix& m2);
-    Matrix ScalarMultiplication(const Matrix& m, double k);
-    Matrix MatrixMultiplication(const Matrix& m1, const Matrix& m2);
     double Determinant2x2(const Matrix& m);
     Matrix MinorMatrix(const Matrix& m, const std::set<Matrix::size_type>& r, const std::set<Matrix::size_type>& c); // allow multiple delete rows/columns
     double Determinant(const Matrix& m);

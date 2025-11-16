@@ -39,38 +39,6 @@ bool isSameDimension(const Vector& v1, const Vector& v2) {
     }
 }
 
-Vector VectorAddition(const Vector& v1, const Vector& v2) {
-    if (!isSameDimension(v1,v2)) {
-        throw std::invalid_argument("Cannot add vectors with different dimensions");
-    }
-    std::vector<double> va;
-    va.reserve(v1.size());
-
-    for (std::size_t i = 0; i < v1.size(); ++i) {
-        va.push_back(v1[i] + v2[i]);
-    }
-
-    return Vector(va);
-}
-
-Vector VectorSubtraction(const Vector& v1, const Vector& v2) {
-    if (!isSameDimension(v1,v2)) {
-        throw std::invalid_argument("Cannot subtract vectors with different dimensions");
-    }
-    Vector v2Neg = ScalarMultiplication(v2,-1);
-    return VectorAddition(v1,v2Neg);
-}
-
-Vector ScalarMultiplication(const Vector& v, double k) {
-    std::vector<double> sm;
-    sm.reserve(v.size());
-    for (std::size_t i = 0; i < v.size(); ++i) {
-        sm.push_back(v[i] * k);
-    }
-
-    return Vector(sm);
-}
-
 double DotProduct(const Vector& v1, const Vector& v2) {
     if (!isSameDimension(v1,v2)) {
         throw std::invalid_argument("Cannot find dot product of vectors with different dimensions");
@@ -108,7 +76,7 @@ double VectorNorm(const Vector& v) {
 }
 
 double Distance(const Vector& v1, const Vector& v2) {
-    Vector v1Minusv2 = VectorSubtraction(v1,v2);
+    Vector v1Minusv2 = v1 - v2;
     return VectorNorm(v1Minusv2);
 }
 
@@ -118,7 +86,7 @@ Vector Normalize(const Vector& v) {
         throw std::runtime_error("Division by Zero error encountered");
     }
     double k = 1.0 / vNorm;
-    return ScalarMultiplication(v,k);
+    return v * k;
 }
 
 double AngleBetween(const Vector& v1, const Vector& v2) {
@@ -139,7 +107,7 @@ Vector Projection(const Vector& v1, const Vector& v2) {
     double v1Dotv2 = DotProduct(v1,v2);
     double v2Dotv2 = DotProduct(v2,v2);
     double k = v1Dotv2 / v2Dotv2;
-    return ScalarMultiplication(v2,k);
+    return v2 * k;
 }
 
 // Vector Rotation2D(const Vector& v, double degrees) {

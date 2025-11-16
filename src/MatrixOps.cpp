@@ -56,68 +56,6 @@ bool isIdentityMatrix(const Matrix& m) {
     return true;
 }
 
-Matrix MatrixAddition(const Matrix& m1, const Matrix& m2) {
-    std::vector<Matrix::size_type> m1Dim = m1.dimension();
-    std::vector<Matrix::size_type> m2Dim = m2.dimension();
-
-    if (m1Dim != m2Dim) {
-        throw std::invalid_argument("Matrices must have same dimension.");
-    } 
-
-    Matrix ma = Matrix(m1Dim[0],m1Dim[1]); // Initialize zero matrix we will modify for final output
-
-    for (int i = 0; i < m1Dim[0]; ++i) {
-        for (int j = 0; j < m1Dim[1]; ++j) {
-            ma.row(i)[j] = m1.row(i)[j] + m2.row(i)[j];
-        }
-    }
-
-    return ma;
-}
-
-Matrix MatrixSubtraction(const Matrix& m1, const Matrix& m2) {
-    Matrix m2Neg = ScalarMultiplication(m2,-1);
-    return MatrixAddition(m1,m2Neg);
-}
-
-Matrix ScalarMultiplication(const Matrix& m, double k) {
-    Matrix sm = Matrix(m);
-
-    for (Vector& r : sm) {
-        for (double& c : r) {
-            c *= k;
-        }
-    }
-
-    return sm;
-}
-
-Matrix MatrixMultiplication(const Matrix& m1, const Matrix& m2) {
-    std::vector<Matrix::size_type> m1Dim = m1.dimension();
-    std::vector<Matrix::size_type> m2Dim = m2.dimension();
-
-    if (m1Dim[1] != m2Dim[0]) {
-        throw std::invalid_argument("m1 column dimension must equal m2 row dimension.");
-    }
-
-    Matrix mm = Matrix(m1Dim[0],m2Dim[1]);
-
-    for (Matrix::size_type i = 0; i < m1Dim[0]; ++i) {
-        Vector r = Vector(m2Dim[1],0.0);
-        for (Matrix::size_type j = 0; j < m2Dim[1]; ++j) {
-            double entry = 0.0;
-            for (Matrix::size_type k = 0; k < m1Dim[1]; ++k) {
-                entry += m1.row(i)[k] * m2.row(k)[j];
-            }
-            r[j] = entry;
-        }
-        mm.row(i) = r;
-    }
-
-    return mm;
-    
-}
-
 double Determinant2x2(const Matrix& m) {
     std::vector<Matrix::size_type> mDim = m.dimension();
     if (mDim[0] != 2 || mDim[1] != 2) {
@@ -565,7 +503,7 @@ bool isOrthonormal(const Matrix&m) {
     }
     
     Matrix mT = Transpose(m);
-    Matrix mm = MatrixMultiplication(mT,m);
+    Matrix mm = mT * m;
     
     return isIdentityMatrix(mm);
     
@@ -602,7 +540,7 @@ bool isOrthogonal(const Matrix& m1, const Matrix& m2) {
     That is  -> trace(A^T x B) = 0
     */
     Matrix m1Transpose = Transpose(m1);
-    Matrix mm = MatrixMultiplication(m1Transpose,m2);
+    Matrix mm = m1Transpose * m2;
 
     double t = Trace(mm);
     return t == 0.0;

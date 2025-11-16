@@ -10,9 +10,6 @@ Current method of creating multiple copy-vector objects within functions can bec
 namespace la {
 
     // Arithmetic
-    Vector VectorAddition(const Vector& v1, const Vector& v2);
-    Vector VectorSubtraction(const Vector& v1, const Vector& v2);
-    Vector ScalarMultiplication(const Vector& v, double k);
     double DotProduct(const Vector& v1, const Vector& v2);
     Vector CrossProduct(const Vector& v1, const Vector& v2);
 
