@@ -44,10 +44,10 @@ bool isIdentityMatrix(const Matrix& m) {
 
     for (Matrix::size_type i = 0; i < mDim[0]; ++i) {
         for (Matrix::size_type j = 0; j < mDim[1]; ++j) {
-            if (i != j && m.row(i)[j] != 0.0) {
+            if (i != j && m[i][j] != 0.0) {
                 return false;
             }
-            else if (i == j && m.row(i)[j] != 1.0) {
+            else if (i == j && m[i][j] != 1.0) {
                 return false;
             }
         }
@@ -62,7 +62,7 @@ double Determinant2x2(const Matrix& m) {
         throw std::invalid_argument("Must enter a 2x2 matrix.");
     }
 
-    return (m.row(0)[0] * m.row(1)[1]) - (m.row(0)[1] * m.row(1)[0]);
+    return (m[0][0] * m[1][1]) - (m[0][1] * m[1][0]);
 }
 
 Matrix MinorMatrix(const Matrix& m, const std::set<Matrix::size_type>& r, const std::set<Matrix::size_type>& c) {
@@ -94,7 +94,7 @@ Matrix MinorMatrix(const Matrix& m, const std::set<Matrix::size_type>& r, const 
             if (c.find(j) != c.end()) {
                 continue;
             }
-            mm.row(curr_mmRow)[curr_mmCol] = m.row(i)[j];
+            mm[curr_mmRow][curr_mmCol] = m[i][j];
             ++curr_mmCol;
         }
         ++curr_mmRow;
@@ -111,7 +111,7 @@ double Determinant(const Matrix& m) {
     }
 
     if (mDim[0] == 1) {
-        return m.row(0)[0]; // 1x1 determinant has matrix equal to its only entry
+        return m[0][0]; // 1x1 determinant has matrix equal to its only entry
     }
     else if (mDim[0] == 2) {
         return Determinant2x2(m);
@@ -131,7 +131,7 @@ double Determinant(const Matrix& m) {
             std::vector<Matrix::size_type> r_z_indices; // col index for current row check 0 entries
 
             for (Matrix::size_type j = 0; j < mDim[1]; ++j) {
-                if (m.row(i)[j] == 0) {
+                if (m[i][j] == 0) {
                     ++r_num_zero;
                     r_z_indices.push_back(j);
                 }
@@ -154,7 +154,7 @@ double Determinant(const Matrix& m) {
                 Matrix mm = MinorMatrix(m, std::set<Matrix::size_type>{r_delete}, std::set<Matrix::size_type>{k});
 
                 double sign = ((r_delete + k) & 1) ? -1.0 : 1.0;    // bitwise parity
-                det += std::pow(-1,(r_delete + k)) * m.row(r_delete)[k] * Determinant(mm);
+                det += std::pow(-1,(r_delete + k)) * m[r_delete][k] * Determinant(mm);
             }
         }
 
@@ -166,7 +166,7 @@ double Determinant(const Matrix& m) {
 
 Matrix RowScale(const Matrix& m, const Matrix::size_type& r) {
     double f = 0.0;
-    for (double x : m.row(r)) {
+    for (double x : m[r]) {
         if (x != 0) {
             f = x;
             break;
@@ -179,7 +179,7 @@ Matrix RowScale(const Matrix& m, const Matrix::size_type& r) {
     else {
         Matrix m2(m);
     
-        for (double& c : m2.row(r)) {
+        for (double& c : m2[r]) {
             c /= f;
         }
 
@@ -189,7 +189,7 @@ Matrix RowScale(const Matrix& m, const Matrix::size_type& r) {
 
 Matrix RowSwap(const Matrix& m, const Matrix::size_type& r1, const Matrix::size_type& r2) {
     Matrix rs(m);
-    std::swap(rs.row(r1),rs.row(r2));
+    std::swap(rs[r1],rs[r2]);
     return rs;
 }
 
@@ -202,43 +202,37 @@ Matrix RowReplacement(const Matrix&m, const Matrix::size_type& r1, const Matrix:
     */
     
     // If target or source row is zero vector, do nothing
-    if (la::isZeroVector(m.row(r1)) || la::isZeroVector(m.row(r2))) {
+    if (la::isZeroVector(m[r1]) || la::isZeroVector(m[r2])) {
         return m;
     }
 
     // Find source row's pivot column
     Matrix::size_type sp;
-    for (Matrix::size_type i = 0; i < m.row(r2).size(); ++i) {
-        if (m.row(r2)[i] != 0.0) {
+    for (Matrix::size_type i = 0; i < m[r2].size(); ++i) {
+        if (m[r2][i] != 0.0) {
             sp = i;
             break;
         }
     }
 
     // Check target row value at source's pivot column. If 0, we do nothing
-    if (m.row(r1)[sp] == 0.0) {
+    if (m[r1][sp] == 0.0) {
         return m;
     }
 
     // Calculate k
-    double k = -1 * m.row(r1)[sp] / m.row(r2)[sp];
+    double k = -1 * m[r1][sp] / m[r2][sp];
 
     // Find new target row by 
     std::vector<double> nr1;
-    for (Matrix::size_type j = 0; j < m.row(r1).size(); ++j) {
-        double newVal = m.row(r1)[j] + (k * m.row(r2)[j]);
+    for (Matrix::size_type j = 0; j < m[r1].size(); ++j) {
+        double newVal = m[r1][j] + (k * m[r2][j]);
         nr1.push_back(newVal);
-        // if (abs(newVal) == 0.0) { // This logic converted double to int
-        //     nr1.push_back(0.0);
-        // }
-        // else {
-        //     nr1.push_back(newVal);
-        // }
     }
 
     // Initialize return matrix
     la::Matrix rrm(m);
-    rrm.row(r1) = la::Vector(nr1);
+    rrm[r1] = la::Vector(nr1);
 
     return rrm;
 }
@@ -268,18 +262,18 @@ Matrix RowEchelonForm(const Matrix& m) {
     
     while (curr_r < rc && curr_c < cc) {
         // Check current row/col to see if it's a pivot
-        if (ref.row(curr_r)[curr_c] == 0.0) {
+        if (ref[curr_r][curr_c] == 0.0) {
 
             // Iterate through below rows to search for non-zero to swap with
             for (Matrix::size_type i = curr_r + 1; i < rc; ++i) {
-                if (ref.row(i)[curr_c] != 0) {
+                if (ref[i][curr_c] != 0) {
                     ref = RowSwap(ref,curr_r,i);
                     break;
                 }
             }
 
             // If value is still 0, we have a free variable. Move to next column
-            if (ref.row(curr_r)[curr_c] == 0.0) {
+            if (ref[curr_r][curr_c] == 0.0) {
                 curr_c++;
                 continue;
             }
@@ -322,7 +316,7 @@ Matrix ReducedRowEchelonForm(const Matrix& m) {
     for (int r = refDim[0] - 1; r >= 0; --r) {
         // make r int bc Matrix::size_type is signed, so --0 becomes a long long int. Use static_cast below to access elements
         for (Matrix::size_type c = 0; c < refDim[1]; ++c) {
-            if (ref.row(static_cast<Matrix::size_type>(r))[c] != 0.0) {
+            if (ref[static_cast<Matrix::size_type>(r)][c] != 0.0) {
                 pvts.push_back(static_cast<Matrix::size_type>(r));
                 break;
             }
@@ -385,8 +379,8 @@ Matrix AugmentedMatrix(const Matrix& m1, const Matrix& m2) {
     for (Matrix::size_type i = 0; i < m1RowCount; ++i) {
         std::vector<double> cv;
         cv.reserve(m1ColCount + m2ColCount);
-        const Vector& row1 = m1.row(i);
-        const Vector& row2 = m2.row(i);
+        const Vector& row1 = m1[i];
+        const Vector& row2 = m2[i];
         cv.insert(cv.end(), row1.begin(), row1.end());
         cv.insert(cv.end(), row2.begin(), row2.end());
 
@@ -418,7 +412,7 @@ Matrix AugmentedMatrixSplit(const Matrix& m, Matrix::size_type r, AmSide side) {
     for (Matrix::size_type i = 0; i < m.rowCount(); ++i) {
         std::vector<double> row;
         for (Matrix::size_type j = b; j < e; ++j) {
-            row.push_back(m.row(i)[j]);
+            row.push_back(m[i][j]);
         }
         ams.push_back(Vector(row));
     }
@@ -482,7 +476,7 @@ Matrix Transpose(const Matrix& m) {
         t_row.reserve(mColCount);
 
         for (Matrix::size_type j = 0; j < mRowCount; ++j) {
-            t_row.push_back(m.row(j)[i]);
+            t_row.push_back(m[j][i]);
         }
 
         t.push_back(Vector(t_row));
@@ -518,7 +512,7 @@ Vector Diagonal(const Matrix& m) {
     d.reserve(mRowCount);
     
     for (Matrix::size_type i = 0; i < mRowCount; ++i) {
-        d.push_back(m.row(i)[i]);
+        d.push_back(m[i][i]);
     }
     
     return Vector(d);
@@ -561,7 +555,7 @@ bool isDiagonal(const Matrix& m) {
     std::vector<Matrix::size_type> mDim = m.dimension();
     for (Matrix::size_type i = 0; i < mDim[0]; ++i) {
         for (Matrix::size_type j = 0; j < mDim[1]; ++j) {
-            if (i != j && m.row(i)[j] != 0.0) {
+            if (i != j && m[i][j] != 0.0) {
                 return false;
             }
         }
@@ -581,10 +575,10 @@ bool isTriangular(const Matrix& m) {
 
     for (Matrix::size_type i = 0; i < mRowCount; ++i) {
         for (Matrix::size_type j = 0; j < mRowCount; ++j) {
-            if (i > j && m.row(i)[j] != 0.0) {
+            if (i > j && m[i][j] != 0.0) {
                 isUpper = false;
             }
-            if (i < j && m.row(i)[j] != 0.0) {
+            if (i < j && m[i][j] != 0.0) {
                 isLower = false;
             }
         }
@@ -606,10 +600,10 @@ std::vector<std::string> TriangularType(const Matrix& m) {
 
     for (Matrix::size_type i = 0; i < mRowCount; ++i) {
         for (Matrix::size_type j = 0; j < mRowCount; ++j) {
-            if (i > j && m.row(i)[j] != 0.0) {
+            if (i > j && m[i][j] != 0.0) {
                 isUpper = false;
             }
-            if (i < j && m.row(i)[j] != 0.0) {
+            if (i < j && m[i][j] != 0.0) {
                 isLower = false;
             }
         }

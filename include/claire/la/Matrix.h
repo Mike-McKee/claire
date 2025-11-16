@@ -39,8 +39,6 @@ public:
     std::vector<size_type> dimension() const;
     size_type rowCount() const;
     size_type colCount() const;
-    const Vector& row(size_type i) const;
-    Vector& row(size_type i);
     
     void push_back(const Vector& v);
     void reserve(size_type s);
